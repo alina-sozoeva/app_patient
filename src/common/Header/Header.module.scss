@@ -1,0 +1,26 @@
+.header {
+  background-color: transparent;
+  width: 100%;
+  position: fixed;
+  padding: 10px;
+  color: var(--white-color);
+
+  &_content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+  }
+
+  &_burger {
+    position: absolute;
+    left: 10px;
+    z-index: 12;
+    cursor: pointer;
+  }
+
+  &_img {
+    width: 30%;
+  }
+}
