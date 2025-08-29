@@ -1,15 +1,16 @@
 .main {
-  background-color: var(--primary-color);
   color: var(--white-color);
 }
 
 .new_rx {
   padding: 80px 0;
   gap: 10px;
+  background-color: var(--primary-color);
   box-shadow: 0 1px 20px var(--primary-color);
+  cursor: pointer;
 
   img {
-    width: 30%;
+    width: 35%;
   }
 
   span {
@@ -24,7 +25,7 @@
 }
 
 .act {
-  height: 220px;
+  height: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;

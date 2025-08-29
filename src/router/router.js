@@ -20,6 +20,10 @@ const Layout = () => {
 export const router = createBrowserRouter([
   {
     element: <Layout />,
-    children: [{ path: "/", element: <Pages.HomePage /> }],
+    children: [
+      { path: "/", element: <Pages.HomePage /> },
+      { path: "/patients", element: <Pages.PatientsPage /> },
+      { path: "/patient/:id", element: <Pages.PatientPage /> },
+    ],
   },
 ]);
