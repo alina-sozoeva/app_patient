@@ -1,11 +1,14 @@
 .patient {
+}
+
+.title {
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.patient_header {
   background-color: var(--grey-color);
   padding: 10px 20px;
-
-  span {
-    text-transform: uppercase;
-    font-weight: 700;
-  }
 
   button {
     background-color: var(--green-color);
@@ -13,6 +16,39 @@
     padding: 5px 10px;
     color: var(--white-color);
   }
+}
+
+.patient_about {
+  padding: 5px 10px;
+}
+
+.dop_arr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  cursor: pointer;
+
+  svg {
+    font-size: 20px;
+    color: var(--grey-color);
+  }
+}
+
+.patient_info {
+  &_fio {
+    font-weight: 700;
+  }
+
+  &_bday,
+  &_gender {
+    // color: var(--dark-grey-color);
+  }
+}
+
+.act_btn {
+  color: var(--blue-color);
+  cursor: pointer;
 }
 
 .create_btn {

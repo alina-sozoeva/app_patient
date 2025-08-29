@@ -4,11 +4,13 @@ import { Flex } from "antd";
 
 import styles from "./PatientPage.module.scss";
 import clsx from "clsx";
-import { PhoneFilled } from "@ant-design/icons";
+import { DownOutlined, PhoneFilled } from "@ant-design/icons";
 import { gender } from "../../enums";
+import { useState } from "react";
 
 export const PatientPage = () => {
   const { id } = useParams();
+  const [dopInfo, setDopInfo] = useState(false);
 
   const findPatient = patients.find((item) => item.id === +id);
 
@@ -17,49 +19,68 @@ export const PatientPage = () => {
   );
 
   return (
-    <main>
-      <Flex
-        className={clsx(styles.patient, "container")}
-        justify="space-between"
-        align="center"
-      >
-        <span>Профиль</span>
-        <button>
-          Позвонить <PhoneFilled />
-        </button>
-      </Flex>
-      <Flex justify="space-between">
-        <Flex vertical>
-          <Flex gap="small" className={clsx(styles.item_info)}>
-            <span className={clsx(styles.item_info_fio)}>
-              {findPatient.fio}
-            </span>
-            <span className={clsx(styles.item_bday)}>
-              ({findPatient.birthday})
-            </span>
-          </Flex>
-          <span>{gender[findPatient.gender]}</span>
+    <main className={clsx(styles.patient)}>
+      <section className={clsx("container relative")}>
+        <Flex
+          className={clsx(styles.patient_header)}
+          justify="space-between"
+          align="center"
+        >
+          <span className={clsx(styles.title)}>Профиль</span>
+          <button>
+            Позвонить <PhoneFilled />
+          </button>
         </Flex>
 
-        <span>Ркдактировать</span>
-      </Flex>
-      <Flex justify="space-between">
-        <Flex vertical>
-          <span>Аптека</span>
-          <span>{findPhar.name}</span>
-          <span>{findPhar.address}</span>
+        <Flex vertical className={clsx(styles.patient_about)}>
+          <Flex justify="space-between">
+            <Flex vertical>
+              <Flex gap="small" className={clsx(styles.patient_info)}>
+                <span className={clsx(styles.patient_info_fio)}>
+                  {findPatient.fio}
+                </span>
+                <span className={clsx(styles.patient_info_bday)}>
+                  ({findPatient.birthday})
+                </span>
+              </Flex>
+              <span className={clsx(styles.patient_info_gender)}>
+                {gender[findPatient.gender]}
+              </span>
+            </Flex>
+
+            <span className={clsx(styles.act_btn)}>Редактировать</span>
+          </Flex>
+
+          {dopInfo && (
+            <Flex justify="space-between" className={clsx("pt-4")}>
+              <Flex vertical>
+                <span className={clsx(styles.title)}>Аптека</span>
+                <span>{findPhar.name}</span>
+                <span style={{ maxWidth: "160px" }}>{findPhar.address}</span>
+              </Flex>
+              <span className={clsx(styles.act_btn)}>Изменить</span>
+            </Flex>
+          )}
+          <div
+            className={clsx(styles.dop_arr)}
+            onClick={() => setDopInfo(!dopInfo)}
+          >
+            <DownOutlined rotate={dopInfo && 180} />
+          </div>
         </Flex>
-        <span>Изменить</span>
-      </Flex>
-      <Flex
-        className={clsx(styles.patient, "container")}
-        justify="space-between"
-        align="center"
-      >
-        <span>Активные метикаменты</span>
-        <span>Изменить</span>
-      </Flex>
-      <button className={clsx(styles.create_btn)}>Создать рецепт</button>
+
+        <Flex
+          className={clsx(styles.patient_header, "container")}
+          justify="space-between"
+          align="center"
+        >
+          <span className={clsx(styles.title)}>Активные метикаменты</span>
+          <span className={clsx(styles.act_btn)}>Изменить</span>
+        </Flex>
+      </section>
+      <div className={clsx("relative w-full")}>
+        <button className={clsx(styles.create_btn)}>Создать рецепт</button>
+      </div>
     </main>
   );
 };
