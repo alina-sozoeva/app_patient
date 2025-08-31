@@ -1,10 +1,10 @@
 import { Flex } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 
-import styles from "./PatientIem.module.scss";
+import styles from "./PatientItem.module.scss";
 import clsx from "clsx";
 
-export const PatientIem = ({ item, onClick }) => {
+export const PatientItem = ({ item, onClick }) => {
   return (
     <Flex
       justify="space-between"

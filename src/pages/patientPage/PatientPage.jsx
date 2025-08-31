@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { patients, pharmacies } from "../../data";
+import { medications, patients, pharmacies } from "../../data";
 import { Flex } from "antd";
 
 import styles from "./PatientPage.module.scss";
@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { DownOutlined, PhoneFilled } from "@ant-design/icons";
 import { gender } from "../../enums";
 import { useState } from "react";
+import { MedHistoryItem } from "../../components";
 
 export const PatientPage = () => {
   const { id } = useParams();
@@ -19,7 +20,7 @@ export const PatientPage = () => {
   );
 
   return (
-    <main className={clsx(styles.patient)}>
+    <main className={clsx(styles.patient, "relative")}>
       <section className={clsx("container relative")}>
         <Flex
           className={clsx(styles.patient_header)}
@@ -78,7 +79,24 @@ export const PatientPage = () => {
           <span className={clsx(styles.act_btn)}>Изменить</span>
         </Flex>
       </section>
-      <div className={clsx("relative w-full")}>
+
+      <section className={clsx("container")}>
+        <div className={clsx(styles.active_med)}>
+          <Flex
+            className={clsx(styles.active_med_title)}
+            justify="space-between"
+          >
+            <span>Медициская история</span>
+            <span className={clsx(styles.act_btn)}>Вытащить запись</span>
+          </Flex>
+        </div>
+        <Flex vertical>
+          {medications.map((item) => (
+            <MedHistoryItem item={item} />
+          ))}
+        </Flex>
+      </section>
+      <div className={clsx(styles.create_btn_wrap, "relative w-full")}>
         <button className={clsx(styles.create_btn)}>Создать рецепт</button>
       </div>
     </main>

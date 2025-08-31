@@ -15,6 +15,7 @@
     border: none;
     padding: 5px 10px;
     color: var(--white-color);
+    border-radius: 5px;
   }
 }
 
@@ -30,7 +31,7 @@
   cursor: pointer;
 
   svg {
-    font-size: 20px;
+    font-size: 17px;
     color: var(--grey-color);
   }
 }
@@ -39,11 +40,6 @@
   &_fio {
     font-weight: 700;
   }
-
-  &_bday,
-  &_gender {
-    // color: var(--dark-grey-color);
-  }
 }
 
 .act_btn {
@@ -51,12 +47,29 @@
   cursor: pointer;
 }
 
-.create_btn {
+.active_med {
+  padding: 10px 20px 0 20px;
+
+  &_title {
+    padding: 5px 10px;
+    background-color: var(--light-green-color);
+    border: 1px solid var(--green-color);
+    border-radius: 5px;
+  }
+}
+
+.create_btn_wrap {
   position: fixed;
   bottom: 0;
+  background-color: var(--grey-color);
+  padding: 10px 20px 30px 10px;
+}
+
+.create_btn {
   width: 100%;
   background-color: var(--green-color);
   border: none;
   padding: 10px;
   color: var(--white-color);
+  border-radius: 5px;
 }
