@@ -1,29 +1,35 @@
-import { LeftOutlined, MenuOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  HomeOutlined,
+  LeftOutlined,
+  MenuOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { Flex, Input } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import logo from "../../assets/iprescribe-logo.svg";
 
 import styles from "./Header.module.scss";
 import clsx from "clsx";
-import { useLocation, useNavigate } from "react-router-dom";
+import { pathname } from "../../enums";
 
 export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const pathname = location.pathname;
+  const path = location.pathname;
 
   return (
     <header className={clsx(styles.header)}>
       <section className={clsx(styles.header_content, "container")}>
-        {pathname === "/" && (
+        {path === pathname.home && (
           <Flex className={clsx(clsx(styles.header_info))}>
             <MenuOutlined className={clsx(styles.header_burger)} />
             <span>LOGO</span>
             {/* <img className={clsx(styles.header_img)} src={logo} alt={logo} /> */}
           </Flex>
         )}
-        {pathname === "/patients" && (
+        {path === pathname.patients && (
           <Flex className={clsx(clsx(styles.header_info))}>
             <LeftOutlined
               className={clsx(styles.header_arr)}
@@ -36,13 +42,20 @@ export const Header = () => {
             />
           </Flex>
         )}
-        {pathname.startsWith("/patient/") && (
+        {path.startsWith("/patient/") && (
           <Flex className={clsx(clsx(styles.header_info))}>
             <LeftOutlined
               className={clsx(styles.header_arr_orher)}
-              onClick={() => navigate("/patients")}
+              onClick={() => navigate(pathname.patients)}
             />
             <span>ПАЦИЕНТ</span>
+          </Flex>
+        )}
+        {path === pathname.newRx && (
+          <Flex justify="space-between">
+            <LeftOutlined onClick={() => navigate(pathname.patients)} />
+            <span>Создать новый рецепт</span>
+            <HomeOutlined onClick={() => navigate(pathname.home)} />
           </Flex>
         )}
       </section>

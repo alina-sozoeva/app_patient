@@ -5,6 +5,10 @@ export const patients = [
     birthday: "14/05/1988",
     gender: "male",
     pharmacy_id: 1,
+    rxs: [
+      { rx_id: 1, dose_id: 1 },
+      { rx_id: 3, dose_id: 2 },
+    ],
   },
   {
     id: 2,
@@ -12,6 +16,7 @@ export const patients = [
     birthday: "03/11/1992",
     gender: "female",
     pharmacy_id: 2,
+    rxs: [{ rx_id: 2, dose_id: 2 }],
   },
   {
     id: 3,
@@ -19,6 +24,10 @@ export const patients = [
     birthday: "21/02/1979",
     gender: "male",
     pharmacy_id: 3,
+    rxs: [
+      { rx_id: 3, dose_id: 1 },
+      { rx_id: 4, dose_id: 2 },
+    ],
   },
   {
     id: 4,
@@ -26,6 +35,7 @@ export const patients = [
     birthday: "30/07/1995",
     gender: "female",
     pharmacy_id: 4,
+    rxs: [{ rx_id: 5, dose_id: 1 }],
   },
   {
     id: 5,
@@ -33,6 +43,10 @@ export const patients = [
     birthday: "12/09/2000",
     gender: "male",
     pharmacy_id: 5,
+    rxs: [
+      { rx_id: 1, dose_id: 2 },
+      { rx_id: 2, dose_id: 1 },
+    ],
   },
   {
     id: 6,
@@ -40,6 +54,10 @@ export const patients = [
     birthday: "18/03/1985",
     gender: "female",
     pharmacy_id: 2,
+    rxs: [
+      { rx_id: 4, dose_id: 1 },
+      { rx_id: 5, dose_id: 2 },
+    ],
   },
   {
     id: 7,
@@ -47,6 +65,7 @@ export const patients = [
     birthday: "25/06/1993",
     gender: "male",
     pharmacy_id: 1,
+    rxs: [{ rx_id: 1, dose_id: 1 }],
   },
   {
     id: 8,
@@ -54,6 +73,10 @@ export const patients = [
     birthday: "09/10/1989",
     gender: "female",
     pharmacy_id: 3,
+    rxs: [
+      { rx_id: 2, dose_id: 1 },
+      { rx_id: 3, dose_id: 2 },
+    ],
   },
   {
     id: 9,
@@ -61,6 +84,7 @@ export const patients = [
     birthday: "02/01/1975",
     gender: "male",
     pharmacy_id: 4,
+    rxs: [{ rx_id: 4, dose_id: 2 }],
   },
   {
     id: 10,
@@ -68,6 +92,114 @@ export const patients = [
     birthday: "17/08/1998",
     gender: "female",
     pharmacy_id: 5,
+    rxs: [
+      { rx_id: 1, dose_id: 1 },
+      { rx_id: 5, dose_id: 2 },
+    ],
+  },
+];
+
+export const medications = [
+  {
+    id: 1,
+    patient_id: 1,
+    name: "Крестор (розувастатин) 10 мг таблетка",
+    quantity: "30 таблеток",
+    refills: "Без повторных назначений",
+    instructions: "Принимать по 1 таблетке перорально once a day",
+    substitution: "Замена разрешена",
+    start_date: "24/02/2022",
+    last_written: "24/02/2022",
+  },
+  {
+    id: 2,
+    patient_id: 1,
+    name: "Симбалта (дулоксетин) 30 мг капсула",
+    quantity: "90 капсул",
+    refills: "Без повторных назначений",
+    instructions: "Принимать по 1 капсуле перорально once a day",
+    substitution: "Замена разрешена",
+    start_date: "31/06/2023",
+  },
+  {
+    id: 3,
+    patient_id: 2,
+    name: "Метформин 500 мг таблетка",
+    quantity: "60 таблеток",
+    refills: "2 повтора",
+    instructions: "Принимать по 1 таблетке дважды в день с едой",
+    substitution: "Замена разрешена",
+    start_date: "15/01/2023",
+  },
+  {
+    id: 4,
+    patient_id: 3,
+    name: "Эналаприл 10 мг таблетка",
+    quantity: "30 таблеток",
+    refills: "1 повтор",
+    instructions: "Принимать по 1 таблетке once a day утром",
+    substitution: "Замена не разрешена",
+    start_date: "10/09/2022",
+  },
+  {
+    id: 5,
+    patient_id: 3,
+    name: "Аторвастатин 20 мг таблетка",
+    quantity: "30 таблеток",
+    refills: "3 повтора",
+    instructions: "Принимать по 1 таблетке перед сном",
+    substitution: "Замена разрешена",
+    start_date: "11/09/2022",
+  },
+  {
+    id: 6,
+    patient_id: 4,
+    name: "Ибупрофен 200 мг таблетка",
+    quantity: "20 таблеток",
+    refills: "Без повторов",
+    instructions: "Принимать по 1 таблетке при боли, не более 3 в день",
+    substitution: "Замена разрешена",
+    start_date: "05/04/2024",
+  },
+  {
+    id: 7,
+    patient_id: 5,
+    name: "Левотироксин 50 мкг таблетка",
+    quantity: "90 таблеток",
+    refills: "1 повтор",
+    instructions: "Принимать натощак, 1 таблетка утром",
+    substitution: "Замена разрешена",
+    start_date: "20/03/2023",
+  },
+  {
+    id: 8,
+    patient_id: 6,
+    name: "Вальпроат натрия 300 мг капсула",
+    quantity: "60 капсул",
+    refills: "Без повторов",
+    instructions: "Принимать по 1 капсуле дважды в день",
+    substitution: "Замена не разрешена",
+    start_date: "12/02/2024",
+  },
+  {
+    id: 9,
+    patient_id: 7,
+    name: "Амоксициллин 500 мг капсула",
+    quantity: "21 капсула",
+    refills: "Без повторов",
+    instructions: "Принимать по 1 капсуле каждые 8 часов",
+    substitution: "Замена разрешена",
+    start_date: "01/08/2024",
+  },
+  {
+    id: 10,
+    patient_id: 8,
+    name: "Омепразол 20 мг капсула",
+    quantity: "30 капсул",
+    refills: "2 повтора",
+    instructions: "Принимать по 1 капсуле утром натощак",
+    substitution: "Замена разрешена",
+    start_date: "14/06/2023",
   },
 ];
 
@@ -99,22 +231,59 @@ export const pharmacies = [
   },
 ];
 
-export const medications = [
+export const rxs = [
   {
-    name: "Крестор (розувастатин) 10 мг таблетка",
-    quantity: "30 таблеток",
-    refills: "Без повторных назначений",
-    instructions: "Принимать по 1 таблетке перорально once a day",
-    substitution: "Замена разрешена",
-    start_date: "24 февраля 2022 г.",
-    last_written: "24 февраля 2022 г.",
+    id: 1,
+    name: "Метформин",
+    strength: ["250 мг", "500 мг"],
+    form: "таблетка",
+    use: "принимать внутрь",
   },
   {
-    name: "Симбалта (дулоксетин) 30 мг капсула замедленного высвобождения",
-    quantity: "90 капсул",
-    refills: "Без повторных назначений",
-    instructions: "Принимать по 1 капсуле перорально once a day",
-    substitution: "Замена разрешена",
-    start_date: "31 июня 2023 г.",
+    id: 2,
+    name: "Ибупрофен",
+    strength: ["200 мг", "400 мг"],
+    form: "таблетка",
+    use: "принимать внутрь",
+  },
+  {
+    id: 3,
+    name: "Аторвастатин",
+    strength: ["10 мг", "20 мг"],
+    form: "таблетка",
+    use: "принимать внутрь",
+  },
+  {
+    id: 4,
+    name: "Амоксициллин",
+    strength: ["250 мг", "500 мг"],
+    form: "капсула",
+    use: "принимать внутрь",
+  },
+  {
+    id: 5,
+    name: "Омепразол",
+    strength: ["20 мг", "40 мг"],
+    form: "капсула",
+    use: "принимать внутрь",
+  },
+];
+
+export const doses = [
+  {
+    id: 1,
+    description: "1 раз в день утром",
+  },
+  {
+    id: 2,
+    description: "2 раза в день утром и вечером",
+  },
+  {
+    id: 3,
+    description: "3 раза в день каждые 8 часов",
+  },
+  {
+    id: 4,
+    description: "по необходимости, до 3 раз в день",
   },
 ];

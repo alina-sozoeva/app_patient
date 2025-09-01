@@ -1,6 +1,7 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import * as Pages from "../pages";
 import { Header } from "../common";
+import { pathname } from "../enums";
 
 const Layout = () => {
   return (
@@ -21,9 +22,10 @@ export const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { path: "/", element: <Pages.HomePage /> },
-      { path: "/patients", element: <Pages.PatientsPage /> },
-      { path: "/patient/:id", element: <Pages.PatientPage /> },
+      { path: pathname.home, element: <Pages.HomePage /> },
+      { path: pathname.patients, element: <Pages.PatientsPage /> },
+      { path: pathname.patient, element: <Pages.PatientPage /> },
+      { path: pathname.newRx, element: <Pages.NewRxPage /> },
     ],
   },
 ]);

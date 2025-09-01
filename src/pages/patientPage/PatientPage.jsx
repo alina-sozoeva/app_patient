@@ -1,23 +1,28 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { medications, patients, pharmacies } from "../../data";
 import { Flex } from "antd";
 
 import styles from "./PatientPage.module.scss";
 import clsx from "clsx";
 import { DownOutlined, PhoneFilled } from "@ant-design/icons";
-import { gender } from "../../enums";
+import { gender, pathname } from "../../enums";
 import { useState } from "react";
 import { MedHistoryItem } from "../../components";
 
 export const PatientPage = () => {
   const { id } = useParams();
   const [dopInfo, setDopInfo] = useState(false);
+  const navigate = useNavigate();
 
   const findPatient = patients.find((item) => item.id === +id);
 
   const findPhar = pharmacies.find(
     (item) => item.id === findPatient.pharmacy_id
   );
+
+  const filterMed = medications.filter((item) => item.patient_id === +id);
+
+  console.log(filterMed, "filterMed");
 
   return (
     <main className={clsx(styles.patient, "relative")}>
@@ -91,13 +96,18 @@ export const PatientPage = () => {
           </Flex>
         </div>
         <Flex vertical>
-          {medications.map((item) => (
+          {filterMed.map((item) => (
             <MedHistoryItem item={item} />
           ))}
         </Flex>
       </section>
       <div className={clsx(styles.create_btn_wrap, "relative w-full")}>
-        <button className={clsx(styles.create_btn)}>Создать рецепт</button>
+        <button
+          className={clsx(styles.create_btn)}
+          onClick={() => navigate(pathname.newRx)}
+        >
+          Создать рецепт
+        </button>
       </div>
     </main>
   );

@@ -1,0 +1,10 @@
+.fav {
+  padding: 10px 20px;
+  border-bottom: 2px solid var(--grey-color);
+
+  &_info {
+    svg {
+      font-size: 18px;
+    }
+  }
+}

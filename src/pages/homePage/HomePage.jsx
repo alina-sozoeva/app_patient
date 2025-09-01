@@ -12,6 +12,7 @@ import rx from "../../assets/rx.png";
 
 import styles from "./HomePage.module.scss";
 import clsx from "clsx";
+import { pathname } from "../../enums";
 
 const acts = [
   {
@@ -51,7 +52,7 @@ export const HomePage = () => {
           justify="center"
           align="center"
           className={clsx(styles.new_rx)}
-          onClick={() => navigate("/patients")}
+          onClick={() => navigate(pathname.patients)}
         >
           <img src={rx} alt={rx} />
           <span>Новый рецепт</span>
