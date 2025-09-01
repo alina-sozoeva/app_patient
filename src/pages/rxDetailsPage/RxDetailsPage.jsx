@@ -25,8 +25,8 @@ export const RxDetailsPage = () => {
   const findRx = rxs.find((item) => item.id === +doseId);
 
   return (
-    <main>
-      <section className={clsx("container relative")}>
+    <main className={clsx(" relative")}>
+      <section className={clsx("container ")}>
         <Flex
           className={clsx(styles.patient_wrap)}
           justify="space-between"
@@ -148,16 +148,15 @@ export const RxDetailsPage = () => {
           <button className={clsx(styles.btn_con_chil)}>Заменить</button>
           <button className={clsx(styles.btn_con_chil)}>Выдать </button>
         </Flex> */}
-
-        <div className={clsx(styles.create_btn_wrap, "relative w-full")}>
-          <button
-            className={clsx(styles.create_btn)}
-            onClick={() => navigate(`/patient/${id}`)}
-          >
-            Продолжить
-          </button>
-        </div>
       </section>
+      <div className={clsx(styles.create_btn_wrap, " w-full")}>
+        <button
+          className={clsx(styles.create_btn)}
+          onClick={() => navigate(`/patient/${id}`)}
+        >
+          Продолжить
+        </button>
+      </div>
     </main>
   );
 };

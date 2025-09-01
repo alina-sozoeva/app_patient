@@ -40,49 +40,54 @@ export const NewRxPage = () => {
 
   return (
     <main>
-      <Flex
-        className={clsx(styles.patient_header)}
-        justify="space-between"
-        align="center"
-      >
-        <Input
-          prefix={<SearchOutlined />}
-          placeholder="Найти новое лекарство"
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </Flex>
-      <Flex className={clsx(styles.favorite_header)} justify="space-between">
-        <span>Избранное</span>
-        <DownOutlined
-          rotate={favOpen && 180}
-          onClick={() => setFavOpen(!favOpen)}
-        />
-      </Flex>
-      {favOpen && (
-        <Flex vertical>
-          {rxsFav.map((item) => (
-            <FavoriteItem item={item} />
-          ))}
+      <section className={clsx(styles.main, "container")}>
+        <Flex
+          className={clsx(styles.patient_header)}
+          justify="space-between"
+          align="center"
+        >
+          <Input
+            prefix={<SearchOutlined />}
+            placeholder="Найти новое лекарство"
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </Flex>
-      )}
-      <Flex className={clsx(styles.favorite_header)} justify="space-between">
-        <span>Препараты</span>
-        <DownOutlined
-          rotate={rxsOpen && 180}
-          onClick={() => setRxsOpen(!rxsOpen)}
-        />
-      </Flex>
-      {(rxsOpen || search !== "") && (
-        <Flex vertical>
-          {rxs
-            .filter((item) =>
-              item.name.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((item) => (
-              <SearchItem item={item} onNavigate={() => onNavigate(item.id)} />
+        <Flex className={clsx(styles.favorite_header)} justify="space-between">
+          <span>Избранное</span>
+          <DownOutlined
+            rotate={favOpen && 180}
+            onClick={() => setFavOpen(!favOpen)}
+          />
+        </Flex>
+        {favOpen && (
+          <Flex vertical>
+            {rxsFav.map((item) => (
+              <FavoriteItem item={item} />
             ))}
+          </Flex>
+        )}
+        <Flex className={clsx(styles.favorite_header)} justify="space-between">
+          <span>Препараты</span>
+          <DownOutlined
+            rotate={rxsOpen && 180}
+            onClick={() => setRxsOpen(!rxsOpen)}
+          />
         </Flex>
-      )}
+        {(rxsOpen || search !== "") && (
+          <Flex vertical>
+            {rxs
+              .filter((item) =>
+                item.name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((item) => (
+                <SearchItem
+                  item={item}
+                  onNavigate={() => onNavigate(item.id)}
+                />
+              ))}
+          </Flex>
+        )}
+      </section>
     </main>
   );
 };
