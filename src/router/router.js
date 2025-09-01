@@ -26,6 +26,7 @@ export const router = createBrowserRouter([
       { path: pathname.patients, element: <Pages.PatientsPage /> },
       { path: pathname.patient, element: <Pages.PatientPage /> },
       { path: pathname.newRx, element: <Pages.NewRxPage /> },
+      { path: pathname.rxDetails, element: <Pages.RxDetailsPage /> },
     ],
   },
 ]);

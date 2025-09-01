@@ -51,11 +51,20 @@ export const Header = () => {
             <span>ПАЦИЕНТ</span>
           </Flex>
         )}
-        {path === pathname.newRx && (
+        {path.startsWith("/new-rx/") && (
           <Flex justify="space-between">
             <LeftOutlined onClick={() => navigate(pathname.patients)} />
             <span>Создать новый рецепт</span>
             <HomeOutlined onClick={() => navigate(pathname.home)} />
+          </Flex>
+        )}
+        {path.startsWith("/rx-details/") && (
+          <Flex className={clsx(clsx(styles.header_info))}>
+            <LeftOutlined
+              className={clsx(styles.header_arr_orher)}
+              onClick={() => navigate(pathname.patients)}
+            />
+            <span>Детали</span>
           </Flex>
         )}
       </section>

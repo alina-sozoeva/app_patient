@@ -1,0 +1,74 @@
+.patient_wrap {
+  background-color: var(--grey-color);
+  padding: 10px 20px;
+}
+
+.patient_rx {
+  padding: 10px 20px;
+}
+
+.item {
+  padding: 15px 20px;
+  border-bottom: 2px solid var(--grey-color);
+}
+
+.item_active {
+  background-color: var(--green-color);
+  color: #fff;
+  border-radius: 8px;
+}
+
+.btns {
+  padding: 10px 20px;
+}
+
+.btn {
+  padding: 5px 15px;
+  border-radius: 5px;
+  background-color: var(--dark-grey-color);
+  color: var(--white-color);
+
+  &:hover {
+    background-color: var(--green-color);
+  }
+}
+
+.btn.active {
+  background-color: var(--green-color);
+  color: #fff;
+}
+
+.btn_con {
+  border-top: 1px solid var(--grey-color);
+  border-bottom: 1px solid var(--grey-color);
+
+  padding: 10px 20px;
+  gap: 20px;
+}
+
+.btn_con_chil {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: var(--dark-grey-color);
+  color: var(--white-color);
+
+  &:hover {
+    background-color: var(--green-color);
+  }
+}
+
+.create_btn_wrap {
+  position: fixed;
+  bottom: 0;
+  background-color: var(--grey-color);
+  padding: 10px 20px 30px 10px;
+}
+
+.create_btn {
+  width: 100%;
+  background-color: var(--green-color);
+  border: none;
+  padding: 10px;
+  color: var(--white-color);
+  border-radius: 5px;
+}

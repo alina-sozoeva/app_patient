@@ -2,12 +2,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { medications, patients, pharmacies } from "../../data";
 import { Flex } from "antd";
 
-import styles from "./PatientPage.module.scss";
-import clsx from "clsx";
 import { DownOutlined, PhoneFilled } from "@ant-design/icons";
 import { gender, pathname } from "../../enums";
 import { useState } from "react";
 import { MedHistoryItem } from "../../components";
+
+import styles from "./PatientPage.module.scss";
+import clsx from "clsx";
 
 export const PatientPage = () => {
   const { id } = useParams();
@@ -21,8 +22,6 @@ export const PatientPage = () => {
   );
 
   const filterMed = medications.filter((item) => item.patient_id === +id);
-
-  console.log(filterMed, "filterMed");
 
   return (
     <main className={clsx(styles.patient, "relative")}>
@@ -104,7 +103,7 @@ export const PatientPage = () => {
       <div className={clsx(styles.create_btn_wrap, "relative w-full")}>
         <button
           className={clsx(styles.create_btn)}
-          onClick={() => navigate(pathname.newRx)}
+          onClick={() => navigate(`/new-rx/${id}`)}
         >
           Создать рецепт
         </button>

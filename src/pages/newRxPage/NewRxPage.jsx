@@ -7,7 +7,7 @@ import { FavoriteItem, SearchItem } from "../../components";
 import styles from "./NewRxPage.module.scss";
 import clsx from "clsx";
 import { rxs } from "../../data";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { pathname } from "../../enums";
 
 const rxsFav = [
@@ -28,13 +28,14 @@ const rxsFav = [
 ];
 
 export const NewRxPage = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [favOpen, setFavOpen] = useState(true);
   const [rxsOpen, setRxsOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  const onNavigate = () => {
-    navigate(pathname.patient);
+  const onNavigate = (dose_id) => {
+    navigate(`/rx-details/${id}/${dose_id}`);
   };
 
   return (
@@ -78,7 +79,7 @@ export const NewRxPage = () => {
               item.name.toLowerCase().includes(search.toLowerCase())
             )
             .map((item) => (
-              <SearchItem item={item} onNavigate={onNavigate} />
+              <SearchItem item={item} onNavigate={() => onNavigate(item.id)} />
             ))}
         </Flex>
       )}
