@@ -28,6 +28,14 @@ export const patientsApi = createApi({
       }),
       invalidatesTags: ["PatientsList"],
     }),
+    addPatientWithPrescription: builder.mutation({
+      query: (newPatient) => ({
+        url: "/patientWithPrescription",
+        method: "POST",
+        body: newPatient,
+      }),
+      invalidatesTags: ["PatientsList"],
+    }),
   }),
 });
 
@@ -35,4 +43,5 @@ export const {
   useGetPatientsQuery,
   useAddPatientMutation,
   useUpdatePatientMutation,
+  useAddPatientWithPrescriptionMutation,
 } = patientsApi;

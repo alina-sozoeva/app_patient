@@ -1,19 +1,22 @@
 import { useState } from "react";
 import { Flex, Input } from "antd";
-import styles from "./RxDetailsPage.module.scss";
-import clsx from "clsx";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { gender } from "../../enums";
 import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import {
   useAddPrescriptionMutation,
   useAddRecipeItemMutation,
+  useGetCoursesQuery,
   useGetDoseQuery,
   useGetDrugQuery,
   useGetFrequencyQuery,
   useGetMethodUseQuery,
   useGetPatientsQuery,
 } from "../../store";
+
+import styles from "./RxDetailsPage.module.scss";
+import clsx from "clsx";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -34,11 +37,15 @@ export const RxDetailsPage = () => {
   const { data: drugs } = useGetDrugQuery();
   const { data: frequency } = useGetFrequencyQuery();
   const { data: methodUse } = useGetMethodUseQuery();
+  const { data: courses } = useGetCoursesQuery();
+
+  console.log(courses, "courses");
 
   const [dosesOpen, setDosesOpen] = useState(true);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedFrequency, setSelectedFrequency] = useState(null);
+  const [selectedCourses, setSelectedCourses] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(null);
-  const [selectedReception, setSelectedReception] = useState(null);
-  const [selectedDose, setSelectedDose] = useState(null);
   const [addPrescription] = useAddPrescriptionMutation();
   const [addRecipeItem] = useAddRecipeItemMutation();
 
@@ -46,21 +53,33 @@ export const RxDetailsPage = () => {
   const findRx = drugs?.find((item) => item?.codeid === +drug_id);
   const findDose = doses?.find((item) => item?.codeid === +dose_id);
 
-  console.log(selectedQuantity, selectedReception, selectedDose);
+  const onFinish = async () => {
+    const result = await addPrescription({
+      doctorCode: 123,
+      patient_codeid: +findPatient?.codeid,
+    }).unwrap();
 
-  const onFinish = () => {
-    addRecipeItem({
-      prescription_codeid: "",
-      drug_codeid: findRx?.codeid,
-      form_name: findRx?.form_name,
-      dose_nameid: findDose?.nameid,
-      method_use_nameid: methodUse?.[0]?.nameid,
-      course_nameid: "7 дней",
-      frequency_nameid: "3 раза в день",
-      time_before_food: "0",
-      time_during_food: "0",
-      time_after_food: "1",
+    const prescriptionId = +result?.result?.[0]?.prescription_id;
+
+    await addRecipeItem({
+      prescriptionId: prescriptionId,
+      drugId: findRx?.codeid,
+      formName: findRx?.form_name,
+      dose: findDose?.codeid,
+      method: methodUse?.[0]?.codeid,
+      course: selectedCourses,
+      frequency: selectedFrequency,
+      before: selectedTime === "до еды" ? 1 : 0,
+      during: selectedTime === "во время еды" ? 1 : 0,
+      after: selectedTime === "после еды" ? 1 : 0,
     });
+
+    setSelectedTime(null);
+    setSelectedFrequency(null);
+    setSelectedQuantity(null);
+    setSelectedCourses(null);
+
+    navigate(`/patient/${guid}`);
   };
 
   return (
@@ -82,6 +101,7 @@ export const RxDetailsPage = () => {
           <span className={clsx(styles.patient_info_gender)}>
             {gender[findPatient?.gender || 0]}
           </span>
+          {/* <button onClick={() => onFinish()}>add</button> */}
         </Flex>
 
         <Flex vertical className={clsx(styles.patient_rx)}>
@@ -91,6 +111,7 @@ export const RxDetailsPage = () => {
           <span>
             {findDose?.nameid} {findRx?.form_name}
           </span>
+
           <span style={{ color: "var(--blue-color)" }}>
             <b>u</b>
           </span>
@@ -109,10 +130,10 @@ export const RxDetailsPage = () => {
                 key={item.codeid}
                 className={clsx(
                   styles.item,
-                  selectedDose === item.codeid && styles.item_active
+                  selectedFrequency === item.codeid && styles.item_active
                 )}
                 justify="space-between"
-                onClick={() => setSelectedDose(item.codeid)}
+                onClick={() => setSelectedFrequency(item.codeid)}
               >
                 <span>
                   {item?.times_per_day} раза в день по {item?.quantity_per_time}{" "}
@@ -120,7 +141,8 @@ export const RxDetailsPage = () => {
                 </span>
                 <RightOutlined
                   style={{
-                    color: selectedDose === item.id ? "gold" : "inherit",
+                    color:
+                      selectedFrequency === item.codeid ? "gold" : "inherit",
                   }}
                 />
               </Flex>
@@ -154,7 +176,17 @@ export const RxDetailsPage = () => {
         </Flex>
 
         <Flex className={clsx(styles.btns)} justify="space-between">
-          <Input placeholder="Введите кол-во дней" />
+          {courses?.map((item) => (
+            <button
+              key={item?.codeid}
+              className={clsx(styles.btn, {
+                [styles.active]: selectedCourses === item?.codeid,
+              })}
+              onClick={() => setSelectedCourses(item?.codeid)}
+            >
+              {item?.count_days}
+            </button>
+          ))}
         </Flex>
 
         <Flex className={clsx(styles.patient_wrap)} justify="space-between">
@@ -167,9 +199,9 @@ export const RxDetailsPage = () => {
             <button
               key={item}
               className={clsx(styles.btn, {
-                [styles.active]: selectedReception === item,
+                [styles.active]: setSelectedTime === item,
               })}
-              onClick={() => setSelectedReception(item)}
+              onClick={() => setSelectedTime(item)}
             >
               {item}
             </button>
@@ -179,7 +211,7 @@ export const RxDetailsPage = () => {
         <div className={clsx(styles.create_btn_wrap, "container w-full")}>
           <button
             className={clsx(styles.create_btn)}
-            onClick={() => navigate(`/patient/${guid}`)}
+            onClick={() => onFinish()}
           >
             Продолжить
           </button>

@@ -8,6 +8,7 @@ import { frequencyApi } from "./frequency";
 import { methodUseApi } from "./methodUse";
 import { prescriptionApi } from "./prescription";
 import { recipeItemApi } from "./recipeItem";
+import { coursesApi } from "./courses";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     [methodUseApi.reducerPath]: methodUseApi.reducer,
     [prescriptionApi.reducerPath]: prescriptionApi.reducer,
     [recipeItemApi.reducerPath]: recipeItemApi.reducer,
+    [coursesApi.reducerPath]: coursesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([
@@ -32,5 +34,6 @@ export const store = configureStore({
       methodUseApi.middleware,
       prescriptionApi.middleware,
       recipeItemApi.middleware,
+      coursesApi.middleware,
     ]),
 });

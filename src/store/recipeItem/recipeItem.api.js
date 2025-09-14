@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const recipeItemApi = createApi({
   reducerPath: "recipeItemApi",
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_MAIN_URL }),
-  tagTypes: ["RecipeItemList"],
+  tagTypes: ["RecipeItemList", "RecipeList"],
   endpoints: (builder) => ({
     getRecipeItem: builder.query({
       query: (prescriptionId) => ({
@@ -11,6 +11,14 @@ export const recipeItemApi = createApi({
         method: "GET",
       }),
       providesTags: ["RecipeItemList"],
+    }),
+    getRecipe: builder.query({
+      query: (patientId) => ({
+        url: "/recipe",
+        method: "GET",
+        params: patientId,
+      }),
+      providesTags: ["RecipeList"],
     }),
     addRecipeItem: builder.mutation({
       query: (newRecipeItem) => ({
@@ -23,5 +31,8 @@ export const recipeItemApi = createApi({
   }),
 });
 
-export const { useGetRecipeItemQuery, useAddRecipeItemMutation } =
-  recipeItemApi;
+export const {
+  useGetRecipeItemQuery,
+  useAddRecipeItemMutation,
+  useGetRecipeQuery,
+} = recipeItemApi;

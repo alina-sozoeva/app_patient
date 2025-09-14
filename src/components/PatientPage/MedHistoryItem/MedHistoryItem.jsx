@@ -9,21 +9,23 @@ export const MedHistoryItem = ({ item }) => {
     <Flex className={clsx(styles.item)} justify="space-between">
       <Flex vertical>
         <span>
-          <b>{item.name}</b>
+          <b>
+            {item?.drugName} {item?.doseName} ({item?.form_name})
+          </b>
         </span>
-        <span>
-          {item.quantity}, {item.refills}
-        </span>
-        <span>{item.instructions}</span>
-        <span className={clsx(styles.item_sub)}>{item.substitution}</span>
-        <Flex>
+        <span>Без повторных назначений</span>
+        <span>Принимать {item?.frequencyName}</span>
+        <span className={clsx(styles.item_sub)}>Замена разрешена</span>
+        {/* <Flex>
           <span>
-            <b>Дата начала:</b> {item.start_date}
+            <b>Дата начала:</b> 31/06/2023 {item?.start_date}
           </span>
-        </Flex>
+        </Flex> */}
         <Flex>
           <span>
-            <b>Дата окончания приема:</b> {item.last_written}
+            <b>Принимать:</b> {item?.time_after_food && "после еды"}
+            {item?.time_before_food && "до обеда"}
+            {item?.time_during_food && "во время еды"}
           </span>
         </Flex>
       </Flex>

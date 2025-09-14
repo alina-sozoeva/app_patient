@@ -11,11 +11,9 @@ import { useGetPatientsQuery } from "../../store";
 
 export const PatientsPage = () => {
   const navigate = useNavigate();
-  const [search, setSearch] = useState();
+
   const { data, isLoading, isFetching } = useGetPatientsQuery();
   const [openAdd, setOpenAdd] = useState(false);
-
-  const filteredArr = patients.filter((item) => item.fio === search);
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -33,7 +31,7 @@ export const PatientsPage = () => {
           {data?.length === 0 ? (
             <Empty />
           ) : (
-            <Flex vertical>
+            <Flex vertical style={{ maxHeight: "600px", overflowY: "auto" }}>
               {data?.map((item) => (
                 <PatientItem
                   item={item}
