@@ -1,27 +1,52 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { medications, patients, pharmacies } from "../../data";
-import { Flex } from "antd";
+import { medications, pharmacies } from "../../data";
+import { Empty, Flex } from "antd";
 
 import { DownOutlined, PhoneFilled } from "@ant-design/icons";
-import { gender, pathname } from "../../enums";
+import { gender } from "../../enums";
 import { useState } from "react";
 import { MedHistoryItem } from "../../components";
+
+import {
+  useAddDoseMutation,
+  useGetDoseQuery,
+  useGetPatientsQuery,
+} from "../../store";
 
 import styles from "./PatientPage.module.scss";
 import clsx from "clsx";
 
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
+import { useGetPharmacyQuery } from "../../store/pharmacy/pharmacy.api";
+dayjs.locale("ru");
+
 export const PatientPage = () => {
-  const { id } = useParams();
-  const [dopInfo, setDopInfo] = useState(false);
+  const { guid } = useParams();
   const navigate = useNavigate();
 
-  const findPatient = patients.find((item) => item.id === +id);
+  const { data: doses } = useGetDoseQuery();
+  const { data: patients, isLoading } = useGetPatientsQuery();
+  const { data: pharmacy } = useGetPharmacyQuery();
 
-  const findPhar = pharmacies.find(
-    (item) => item.id === findPatient.pharmacy_id
+  const [dopInfo, setDopInfo] = useState(false);
+  const [addDose] = useAddDoseMutation();
+
+  const pharmacyItem = pharmacy?.[0];
+
+  const findPatient = patients?.find((item) => item?.guid === guid);
+
+  const findPhar = pharmacies?.find(
+    (item) => item.id === findPatient?.pharmacy_id
   );
 
-  const filterMed = medications.filter((item) => item.patient_id === +id);
+  const filterMed = medications?.filter((item) => item?.patient_id === guid);
+
+  const onAddDose = () => {
+    addDose({
+      nameid: "500 мг",
+    });
+  };
 
   return (
     <main className={clsx(styles.patient, "relative")}>
@@ -35,6 +60,7 @@ export const PatientPage = () => {
           <button>
             Позвонить <PhoneFilled />
           </button>
+          <button onClick={() => onAddDose()}>dose</button>
         </Flex>
 
         <Flex vertical className={clsx(styles.patient_about)}>
@@ -42,14 +68,14 @@ export const PatientPage = () => {
             <Flex vertical>
               <Flex gap="small" className={clsx(styles.patient_info)}>
                 <span className={clsx(styles.patient_info_fio)}>
-                  {findPatient.fio}
+                  {findPatient?.fio}
                 </span>
                 <span className={clsx(styles.patient_info_bday)}>
-                  ({findPatient.birthday})
+                  {dayjs(findPatient?.birth_date).format("D MMMM YYYY г.")}
                 </span>
               </Flex>
               <span className={clsx(styles.patient_info_gender)}>
-                {gender[findPatient.gender]}
+                {gender[findPatient?.gender]}
               </span>
             </Flex>
 
@@ -60,8 +86,10 @@ export const PatientPage = () => {
             <Flex justify="space-between" className={clsx("pt-4")}>
               <Flex vertical>
                 <span className={clsx(styles.title)}>Аптека</span>
-                <span>{findPhar.name}</span>
-                <span style={{ maxWidth: "160px" }}>{findPhar.address}</span>
+                <span>{pharmacyItem?.nameid}</span>
+                <span style={{ maxWidth: "160px" }}>
+                  {pharmacyItem?.address}
+                </span>
               </Flex>
               <span className={clsx(styles.act_btn)}>Изменить</span>
             </Flex>
@@ -94,20 +122,23 @@ export const PatientPage = () => {
             <span className={clsx(styles.act_btn)}>Вытащить запись</span>
           </Flex>
         </div>
+        {filterMed.length === 0 && (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        )}
         <Flex vertical>
           {filterMed.map((item) => (
             <MedHistoryItem item={item} />
           ))}
         </Flex>
+        <div className={clsx("container", styles.create_btn_wrap)}>
+          <button
+            className={clsx(styles.create_btn)}
+            onClick={() => navigate(`/new-rx/${guid}`)}
+          >
+            Создать рецепт
+          </button>
+        </div>
       </section>
-      <div className={clsx(styles.create_btn_wrap, "relative w-full")}>
-        <button
-          className={clsx(styles.create_btn)}
-          onClick={() => navigate(`/new-rx/${id}`)}
-        >
-          Создать рецепт
-        </button>
-      </div>
     </main>
   );
 };

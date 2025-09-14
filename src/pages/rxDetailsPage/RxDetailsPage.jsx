@@ -86,7 +86,6 @@ export const RxDetailsPage = () => {
           </Flex>
         )}
 
-        {/* Количество таблеток */}
         <Flex className={clsx(styles.patient_wrap)} justify="space-between">
           <span className={clsx(styles.patient_info_fio)}>
             <b>Количество таблеток</b>
@@ -144,19 +143,15 @@ export const RxDetailsPage = () => {
           ))}
         </Flex>
 
-        {/* <Flex className={clsx(styles.btn_con)} align="center" justify="center">
-          <button className={clsx(styles.btn_con_chil)}>Заменить</button>
-          <button className={clsx(styles.btn_con_chil)}>Выдать </button>
-        </Flex> */}
+        <div className={clsx(styles.create_btn_wrap, "container w-full")}>
+          <button
+            className={clsx(styles.create_btn)}
+            onClick={() => navigate(`/patient/${id}`)}
+          >
+            Продолжить
+          </button>
+        </div>
       </section>
-      <div className={clsx(styles.create_btn_wrap, " w-full")}>
-        <button
-          className={clsx(styles.create_btn)}
-          onClick={() => navigate(`/patient/${id}`)}
-        >
-          Продолжить
-        </button>
-      </div>
     </main>
   );
 };

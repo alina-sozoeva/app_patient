@@ -3,14 +3,17 @@ import { Flex } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { patients } from "../../data";
-import { PatientItem } from "../../components";
+import { AddPatientModal, PatientItem } from "../../components";
 
 import clsx from "clsx";
 import styles from "./PatientsPage.module.scss";
+import { useGetPatientsQuery } from "../../store";
 
 export const PatientsPage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState();
+  const { data } = useGetPatientsQuery();
+  const [openAdd, setOpenAdd] = useState(false);
 
   const filteredArr = patients.filter((item) => item.fio === search);
 
@@ -23,17 +26,22 @@ export const PatientsPage = () => {
           align="center"
         >
           <span>Недавние пациенты</span>
-          <button>Добавить пациента</button>
+          <button onClick={() => setOpenAdd(true)}>Добавить пациента</button>
         </Flex>
 
         <Flex vertical>
-          {patients.map((item) => (
+          {data?.map((item) => (
             <PatientItem
               item={item}
-              onClick={() => navigate(`/patient/${item.id}`)}
+              onClick={() => navigate(`/patient/${item.guid}`)}
             />
           ))}
         </Flex>
+        <AddPatientModal
+          open={openAdd}
+          onCancel={() => setOpenAdd(false)}
+          title={"пациента"}
+        />
       </section>
     </main>
   );

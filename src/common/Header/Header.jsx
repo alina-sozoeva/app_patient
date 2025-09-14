@@ -12,10 +12,15 @@ import logo from "../../assets/iprescribe-logo.svg";
 import styles from "./Header.module.scss";
 import clsx from "clsx";
 import { pathname } from "../../enums";
+import { useGetDrugQuery } from "../../store/drug";
 
 export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { data } = useGetDrugQuery();
+
+  console.log(data, "data");
 
   const path = location.pathname;
 

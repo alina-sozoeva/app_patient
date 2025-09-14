@@ -1,13 +1,13 @@
 export const gender = {
-  male: "муж.",
-  female: "жен.",
+  1: "муж.",
+  0: "жен.",
 };
 
 export const pathname = {
   home: "/",
   patients: "/patients",
-  patient: "/patient/:id",
+  patient: "/patient/:guid",
   newRx: "/new-rx/:id",
   login: "/login",
-  rxDetails: "/rx-details/:id/:doseId",
+  rxDetails: "/rx-details/:guid/:doseId",
 };

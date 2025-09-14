@@ -1,2 +1,1 @@
-export * from "./PatientItem";
 export * from "./AddPatientModal";
