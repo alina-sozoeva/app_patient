@@ -1,0 +1,29 @@
+@mixin general {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel {
+  @include general;
+  background-color: #f44336;
+  color: #fff;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
+}
+
+.confirm {
+  @include general;
+  background-color: #5cbf2a;
+  color: #fff;
+
+  &:hover {
+    background-color: #4ea724;
+  }
+}

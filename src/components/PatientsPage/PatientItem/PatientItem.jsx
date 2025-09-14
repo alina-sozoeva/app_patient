@@ -19,9 +19,7 @@ export const PatientItem = ({ item, onClick }) => {
     >
       <Flex className={clsx(styles.item_info)}>
         <span className={clsx(styles.item_info_fio)}>{item.fio}</span>
-        <span className={clsx(styles.item_info_bday)}>
-          {dayjs.utc(item.birth_date).format("D MMMM YYYY г.")}
-        </span>
+        <span className={clsx(styles.item_info_bday)}></span>
       </Flex>
       <RightOutlined />
     </Flex>

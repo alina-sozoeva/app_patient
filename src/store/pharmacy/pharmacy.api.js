@@ -18,6 +18,7 @@ export const pharmacyApi = createApi({
         method: "POST",
         body: { newPharmacy },
       }),
+      invalidatesTags: ["PharmacyList"],
     }),
   }),
 });

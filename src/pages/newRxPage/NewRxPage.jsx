@@ -6,9 +6,8 @@ import { FavoriteItem, SearchItem } from "../../components";
 
 import styles from "./NewRxPage.module.scss";
 import clsx from "clsx";
-import { rxs } from "../../data";
-import { useNavigate, useParams } from "react-router-dom";
-import { pathname } from "../../enums";
+
+import { useGetDrugQuery } from "../../store";
 
 const rxsFav = [
   {
@@ -28,15 +27,11 @@ const rxsFav = [
 ];
 
 export const NewRxPage = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
   const [favOpen, setFavOpen] = useState(true);
   const [rxsOpen, setRxsOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  const onNavigate = (dose_id) => {
-    navigate(`/rx-details/${id}/${dose_id}`);
-  };
+  const { data: drugs } = useGetDrugQuery();
 
   return (
     <main>
@@ -75,15 +70,12 @@ export const NewRxPage = () => {
         </Flex>
         {(rxsOpen || search !== "") && (
           <Flex vertical>
-            {rxs
+            {drugs
               .filter((item) =>
-                item.name.toLowerCase().includes(search.toLowerCase())
+                item.nameid.toLowerCase().includes(search.toLowerCase())
               )
               .map((item) => (
-                <SearchItem
-                  item={item}
-                  onNavigate={() => onNavigate(item.id)}
-                />
+                <SearchItem item={item} drug_id={item.codeid} />
               ))}
           </Flex>
         )}

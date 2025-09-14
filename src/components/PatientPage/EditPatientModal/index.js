@@ -1,2 +1,1 @@
-export * from "./MedHistoryItem";
 export * from "./EditPatientModal";

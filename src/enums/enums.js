@@ -7,7 +7,7 @@ export const pathname = {
   home: "/",
   patients: "/patients",
   patient: "/patient/:guid",
-  newRx: "/new-rx/:id",
+  newRx: "/new-rx/:guid",
   login: "/login",
-  rxDetails: "/rx-details/:guid/:doseId",
+  rxDetails: "/rx-details/:guid/:dose_id/:drug_id",
 };
