@@ -49,7 +49,14 @@ export const AddPatientModal = ({ open, onCancel, title, position }) => {
   return (
     <Modal centered open={open} onCancel={onClose} footer={false} width={300}>
       <Typography.Title level={5}>Добавить {title}</Typography.Title>
-      <Form layout="vertical" form={form} onFinish={onFinish}>
+      <Form
+        layout="vertical"
+        form={form}
+        onFinish={onFinish}
+        initialValues={{
+          gender: 1,
+        }}
+      >
         <Form.Item
           label={`ФИО ${title}`}
           name="fio"

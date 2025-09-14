@@ -26,7 +26,7 @@ export const recipeItemApi = createApi({
         method: "POST",
         body: newRecipeItem,
       }),
-      invalidatesTags: ["RecipeItemList"],
+      invalidatesTags: ["RecipeItemList", "RecipeList"],
     }),
   }),
 });
