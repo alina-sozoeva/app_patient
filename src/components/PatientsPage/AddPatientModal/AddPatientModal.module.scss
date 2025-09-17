@@ -8,6 +8,22 @@
   transition: background-color 0.3s ease;
 }
 
+.from {
+  label {
+    font-size: 12px !important;
+  }
+
+  input {
+    font-size: 12px !important;
+  }
+
+  :global {
+    .ant-form-item {
+      margin-bottom: 10px !important;
+    }
+  }
+}
+
 .cancel {
   @include general;
   background-color: #f44336;

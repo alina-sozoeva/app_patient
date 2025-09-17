@@ -9,5 +9,5 @@ export const pathname = {
   patient: "/patient/:guid",
   newRx: "/new-rx/:guid",
   login: "/login",
-  rxDetails: "/rx-details/:guid/:dose_id/:drug_id",
+  rxDetails: "/rx-details/:guid",
 };

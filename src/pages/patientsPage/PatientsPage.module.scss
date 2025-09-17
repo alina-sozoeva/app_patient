@@ -13,6 +13,13 @@
       border: none;
       padding: 5px 10px;
       color: var(--white-color);
+      border-radius: 10px;
     }
+  }
+}
+
+.patient_add {
+  input {
+    font-weight: 200;
   }
 }

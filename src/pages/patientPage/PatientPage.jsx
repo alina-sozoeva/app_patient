@@ -5,7 +5,11 @@ import { Empty, Flex, Spin } from "antd";
 import { DownOutlined, PhoneFilled } from "@ant-design/icons";
 import { gender } from "../../enums";
 import { useState } from "react";
-import { EditPatientModal, MedHistoryItem } from "../../components";
+import {
+  EditFrequencyModal,
+  EditPatientModal,
+  MedHistoryItem,
+} from "../../components";
 
 import {
   useGetCoursesQuery,
@@ -14,7 +18,6 @@ import {
   useGetFrequencyQuery,
   useGetMethodUseQuery,
   useGetPatientsQuery,
-  useGetPrescriptionQuery,
   useGetRecipeItemQuery,
   useGetRecipeQuery,
 } from "../../store";
@@ -33,6 +36,7 @@ export const PatientPage = () => {
 
   const [openUpdate, setOpenUpdate] = useState(false);
   const [dopInfo, setDopInfo] = useState(false);
+  const [openEditFar, setOpenEditFar] = useState(false);
 
   const { data: patients, isLoading, isFetching } = useGetPatientsQuery();
   const { data: pharmacy } = useGetPharmacyQuery();
@@ -89,8 +93,10 @@ export const PatientPage = () => {
             align="center"
           >
             <span className={clsx(styles.title)}>Профиль</span>
-            <button>
-              Позвонить <PhoneFilled />
+            <button className={clsx(styles.tel)}>
+              <a href={`tel:${findPatient?.phone}`}>
+                Позвонить <PhoneFilled />
+              </a>
             </button>
           </Flex>
 
@@ -106,28 +112,41 @@ export const PatientPage = () => {
                   </span>
                 </Flex>
                 <span className={clsx(styles.patient_info_gender)}>
-                  {gender[findPatient?.gender]}
+                  <b>Пол:</b> {gender[findPatient?.gender]}
+                </span>
+                <span className={clsx(styles.patient_info_gender)}>
+                  <b>Email:</b> {findPatient?.phone}
+                </span>
+                <span className={clsx(styles.patient_info_gender)}>
+                  <b>Телефон:</b> {findPatient?.email}
                 </span>
               </Flex>
 
-              <span
+              {/* <span
                 className={clsx(styles.act_btn)}
                 onClick={() => setOpenUpdate(true)}
               >
                 Редактировать
-              </span>
+              </span> */}
             </Flex>
 
             {dopInfo && (
               <Flex justify="space-between" className={clsx("pt-4")}>
                 <Flex vertical>
                   <span className={clsx(styles.title)}>Аптека</span>
-                  <span>{pharmacyItem?.nameid}</span>
+                  <span>
+                    <b>Телефон:</b> {pharmacyItem?.nameid}
+                  </span>
                   <span style={{ maxWidth: "160px" }}>
-                    {pharmacyItem?.address}
+                    <b>Адрес:</b> {pharmacyItem?.address}
                   </span>
                 </Flex>
-                <span className={clsx(styles.act_btn)}>Изменить</span>
+                <span
+                  className={clsx(styles.act_btn)}
+                  onClick={() => setOpenEditFar(true)}
+                >
+                  Изменить
+                </span>
               </Flex>
             )}
             <div
@@ -143,7 +162,7 @@ export const PatientPage = () => {
             justify="space-between"
             align="center"
           >
-            <span className={clsx(styles.title)}>Активные метикаменты</span>
+            <span className={clsx(styles.title)}>Активные медикаменты</span>
             {/* <span className={clsx(styles.act_btn)}>Изменить</span> */}
           </Flex>
         </section>
@@ -154,19 +173,20 @@ export const PatientPage = () => {
               className={clsx(styles.active_med_title)}
               justify="space-between"
             >
-              <span>Медициская история</span>
-              <span className={clsx(styles.act_btn)}>Вытащить запись</span>
+              <span>Медицинская история</span>
+              {/* <span className={clsx(styles.act_btn)}>Вытащить запись</span> */}
             </Flex>
           </div>
           {mappedRecipesWithNames?.length === 0 && (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
 
-          <Flex vertical style={{ maxHeight: "400px", overflowY: "auto" }}>
+          <Flex vertical style={{ maxHeight: "380px", overflowY: "auto" }}>
             {mappedRecipesWithNames?.map((item) => (
               <MedHistoryItem item={item} />
             ))}
           </Flex>
+
           <div className={clsx("container", styles.create_btn_wrap)}>
             <button
               className={clsx(styles.create_btn)}
@@ -181,6 +201,12 @@ export const PatientPage = () => {
           onCancel={() => setOpenUpdate(false)}
           item={findPatient}
           title={"пациента"}
+        />
+        <EditFrequencyModal
+          open={openEditFar}
+          title={"аптеку"}
+          onCancel={() => setOpenEditFar(false)}
+          item={pharmacyItem}
         />
       </main>
     </Spin>

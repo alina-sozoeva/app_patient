@@ -8,6 +8,7 @@ import styles from "./NewRxPage.module.scss";
 import clsx from "clsx";
 
 import { useGetDrugQuery } from "../../store";
+import { useNavigate, useParams } from "react-router-dom";
 
 const rxsFav = [
   {
@@ -27,11 +28,35 @@ const rxsFav = [
 ];
 
 export const NewRxPage = () => {
+  const { guid } = useParams();
+  const navigate = useNavigate();
+
   const [favOpen, setFavOpen] = useState(true);
-  const [rxsOpen, setRxsOpen] = useState(false);
+  const [rxsOpen, setRxsOpen] = useState(true);
   const [search, setSearch] = useState("");
+  const [selectedDrugs, setSelectedDrugs] = useState(
+    () => JSON.parse(localStorage.getItem("selectedDrugs")) || []
+  );
 
   const { data: drugs } = useGetDrugQuery();
+
+  const filterDrugs = drugs?.filter((item) =>
+    item.nameid.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const toggleDrug = (drug) => {
+    const exists = selectedDrugs?.find((d) => d.codeid === drug.codeid);
+    let updated;
+
+    if (exists) {
+      updated = selectedDrugs?.filter((d) => d.codeid !== drug.codeid);
+    } else {
+      updated = [...selectedDrugs, drug];
+    }
+
+    setSelectedDrugs(updated);
+    localStorage.setItem("selectedDrugs", JSON.stringify(updated));
+  };
 
   return (
     <main>
@@ -48,7 +73,7 @@ export const NewRxPage = () => {
           />
         </Flex>
         <Flex className={clsx(styles.favorite_header)} justify="space-between">
-          <span>Избранное</span>
+          <span>Шаблоны</span>
           <DownOutlined
             rotate={favOpen && 180}
             onClick={() => setFavOpen(!favOpen)}
@@ -62,23 +87,31 @@ export const NewRxPage = () => {
           </Flex>
         )}
         <Flex className={clsx(styles.favorite_header)} justify="space-between">
-          <span>Препараты</span>
+          <span>Медикаменты</span>
           <DownOutlined
             rotate={rxsOpen && 180}
             onClick={() => setRxsOpen(!rxsOpen)}
           />
         </Flex>
         {(rxsOpen || search !== "") && (
-          <Flex vertical>
-            {drugs
-              .filter((item) =>
-                item.nameid.toLowerCase().includes(search.toLowerCase())
-              )
-              .map((item) => (
-                <SearchItem item={item} drug_id={item.codeid} />
-              ))}
+          <Flex vertical style={{ maxHeight: "400px", overflowY: "auto" }}>
+            {filterDrugs?.map((item) => (
+              <SearchItem
+                item={item}
+                selectedDrugs={selectedDrugs}
+                toggleDrug={toggleDrug}
+              />
+            ))}
           </Flex>
         )}
+        <div className={clsx("container", styles.create_btn_wrap)}>
+          <button
+            className={clsx(styles.create_btn)}
+            onClick={() => navigate(`/rx-details/${guid}`)}
+          >
+            Продолжить
+          </button>
+        </div>
       </section>
     </main>
   );

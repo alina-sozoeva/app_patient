@@ -1,3 +1,13 @@
+export const users = [
+  {
+    id: 1,
+    login: "test",
+    phone: "0555555555",
+    name: "testov vrach",
+    password: 123,
+  },
+];
+
 export const patients = [
   {
     id: 1,

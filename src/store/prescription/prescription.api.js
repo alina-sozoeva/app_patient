@@ -20,8 +20,19 @@ export const prescriptionApi = createApi({
       }),
       invalidatesTags: ["PrescriptionList"],
     }),
+    addPatientPrescription: builder.mutation({
+      query: (newPrescription) => ({
+        url: "/patientWithPrescription",
+        method: "POST",
+        body: newPrescription,
+      }),
+      invalidatesTags: ["PrescriptionList"],
+    }),
   }),
 });
 
-export const { useGetPrescriptionQuery, useAddPrescriptionMutation } =
-  prescriptionApi;
+export const {
+  useGetPrescriptionQuery,
+  useAddPrescriptionMutation,
+  useAddPatientPrescriptionMutation,
+} = prescriptionApi;

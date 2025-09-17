@@ -22,9 +22,10 @@
 .strength {
   background-color: var(--bg-grey-color);
   padding: 10px 20px;
+  cursor: pointer;
 
   span {
-    color: var(--blue-color);
+    color: var(--primary-color);
   }
 
   svg {

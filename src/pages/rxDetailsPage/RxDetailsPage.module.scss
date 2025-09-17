@@ -5,6 +5,7 @@
 
 .patient_rx {
   padding: 10px 20px;
+  border: 1px solid var(--primary-color);
 }
 
 .item {
@@ -71,4 +72,16 @@
   padding: 10px;
   color: var(--white-color);
   border-radius: 5px;
+  cursor: pointer;
+}
+
+.create_btn_dis {
+  width: 100%;
+  background-color: var(--dark-grey-color);
+  border: none;
+  padding: 10px;
+  color: var(--white-color);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 }

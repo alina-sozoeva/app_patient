@@ -45,6 +45,10 @@
 .act_btn {
   color: var(--blue-color);
   cursor: pointer;
+
+  svg {
+    font-size: 18px;
+  }
 }
 
 .active_med {
@@ -72,4 +76,10 @@
   padding: 10px;
   color: var(--white-color);
   border-radius: 5px;
+}
+
+.tel {
+  a:hover {
+    color: white !important;
+  }
 }

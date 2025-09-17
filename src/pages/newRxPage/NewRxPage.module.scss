@@ -8,3 +8,19 @@
   padding: 10px 20px;
   color: var(--dark-grey-color);
 }
+
+.create_btn_wrap {
+  position: fixed;
+  bottom: 0;
+  background-color: var(--grey-color);
+  padding: 10px 20px 30px 10px;
+}
+
+.create_btn {
+  width: 100%;
+  background-color: var(--green-color);
+  border: none;
+  padding: 10px;
+  color: var(--white-color);
+  border-radius: 5px;
+}

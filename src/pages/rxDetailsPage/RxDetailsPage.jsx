@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { Flex, Input } from "antd";
-
+import { Flex } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { gender } from "../../enums";
 import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import {
-  useAddPrescriptionMutation,
-  useAddRecipeItemMutation,
+  useAddPatientPrescriptionMutation,
   useGetCoursesQuery,
   useGetDoseQuery,
-  useGetDrugQuery,
   useGetFrequencyQuery,
   useGetMethodUseQuery,
   useGetPatientsQuery,
@@ -29,58 +26,76 @@ const quantity = ["4", "8", "24", "28", "30", "другое"];
 const reception = ["до еды", "во время еды", "после еды"];
 
 export const RxDetailsPage = () => {
-  const { guid, dose_id, drug_id } = useParams();
+  const { guid } = useParams();
   const navigate = useNavigate();
 
+  const [dosesOpen, setDosesOpen] = useState(true);
+  const [drugSelections, setDrugSelections] = useState({});
+
   const { data: patients } = useGetPatientsQuery();
-  const { data: doses } = useGetDoseQuery();
-  const { data: drugs } = useGetDrugQuery();
   const { data: frequency } = useGetFrequencyQuery();
   const { data: methodUse } = useGetMethodUseQuery();
   const { data: courses } = useGetCoursesQuery();
+  const { data: dosages } = useGetDoseQuery();
 
-  console.log(courses, "courses");
-
-  const [dosesOpen, setDosesOpen] = useState(true);
-  const [selectedTime, setSelectedTime] = useState(null);
-  const [selectedFrequency, setSelectedFrequency] = useState(null);
-  const [selectedCourses, setSelectedCourses] = useState(null);
-  const [selectedQuantity, setSelectedQuantity] = useState(null);
-  const [addPrescription] = useAddPrescriptionMutation();
-  const [addRecipeItem] = useAddRecipeItemMutation();
+  const [add] = useAddPatientPrescriptionMutation();
 
   const findPatient = patients?.find((item) => item.guid === guid);
-  const findRx = drugs?.find((item) => item?.codeid === +drug_id);
-  const findDose = doses?.find((item) => item?.codeid === +dose_id);
+  const storedDrugs = JSON.parse(localStorage.getItem("selectedDrugs")) || [];
+
+  const updateSelection = (drugId, field, value) => {
+    setDrugSelections((prev) => ({
+      ...prev,
+      [drugId]: {
+        ...prev[drugId],
+        [field]: value,
+      },
+    }));
+  };
 
   const onFinish = async () => {
-    const result = await addPrescription({
+    const patient = {
+      fio: findPatient?.fio,
+      date_birth: dayjs(findPatient?.birth_date).format("YYYY-MM-DD"),
+      gender: findPatient?.gender,
+      pharmacy_id: findPatient?.pharmacy_id,
+      phone: findPatient?.phone,
+      email: findPatient?.email,
+    };
+
+    const recipeItems = storedDrugs
+      .map((drug) => {
+        const selection = drugSelections[drug.codeid];
+        return {
+          drugId: drug.codeid,
+          formName: drug.form_name,
+          dose: selection?.dose,
+          method: methodUse?.[0]?.codeid,
+          course: selection?.course,
+          frequency: selection?.frequency,
+          before: selection?.time === "до еды" ? 1 : 0,
+          during: selection?.time === "во время еды" ? 1 : 0,
+          after: selection?.time === "после еды" ? 1 : 0,
+          quantity: selection?.quantity,
+        };
+      })
+      .filter(Boolean);
+
+    await add({
+      patient,
+      recipeItems,
       doctorCode: 123,
-      patient_codeid: +findPatient?.codeid,
     }).unwrap();
 
-    const prescriptionId = +result?.result?.[0]?.prescription_id;
-
-    await addRecipeItem({
-      prescriptionId: prescriptionId,
-      drugId: findRx?.codeid,
-      formName: findRx?.form_name,
-      dose: findDose?.codeid,
-      method: methodUse?.[0]?.codeid,
-      course: selectedCourses,
-      frequency: selectedFrequency,
-      before: selectedTime === "до еды" ? 1 : 0,
-      during: selectedTime === "во время еды" ? 1 : 0,
-      after: selectedTime === "после еды" ? 1 : 0,
-    });
-
-    setSelectedTime(null);
-    setSelectedFrequency(null);
-    setSelectedQuantity(null);
-    setSelectedCourses(null);
+    localStorage.removeItem("selectedDrugs");
 
     navigate(`/patient/${guid}`);
   };
+
+  const disabled = storedDrugs.some((drug) => {
+    const s = drugSelections[drug.codeid];
+    return !s?.time || !s?.frequency || !s?.course || !s?.quantity;
+  });
 
   return (
     <main className={clsx(" relative")}>
@@ -89,6 +104,7 @@ export const RxDetailsPage = () => {
           className={clsx(styles.patient_wrap)}
           justify="space-between"
           vertical
+          //
         >
           <Flex gap="small" className={clsx(styles.patient_info)}>
             <span className={clsx(styles.patient_info_fio)}>
@@ -101,118 +117,186 @@ export const RxDetailsPage = () => {
           <span className={clsx(styles.patient_info_gender)}>
             {gender[findPatient?.gender || 0]}
           </span>
-          {/* <button onClick={() => onFinish()}>add</button> */}
         </Flex>
 
-        <Flex vertical className={clsx(styles.patient_rx)}>
-          <span>
-            <b>{findRx?.nameid}</b>
-          </span>
-          <span>
-            {findDose?.nameid} {findRx?.form_name}
-          </span>
-
-          <span style={{ color: "var(--blue-color)" }}>
-            <b>u</b>
-          </span>
-        </Flex>
-
-        <Flex className={clsx(styles.patient_wrap)} justify="space-between">
-          <span className={clsx(styles.patient_info_fio)}>
-            <b>Продолжительность</b>
-          </span>
-          <DownOutlined onClick={() => setDosesOpen(!dosesOpen)} />
-        </Flex>
-        {dosesOpen && (
-          <Flex vertical>
-            {frequency?.map((item) => (
+        <div style={{ maxHeight: "700px", overflowY: "auto" }}>
+          {storedDrugs.map((drug) => {
+            const selection = drugSelections[drug.codeid] || {};
+            return (
               <Flex
-                key={item.codeid}
-                className={clsx(
-                  styles.item,
-                  selectedFrequency === item.codeid && styles.item_active
-                )}
-                justify="space-between"
-                onClick={() => setSelectedFrequency(item.codeid)}
+                vertical
+                className={clsx(styles.patient_rx, "my-4")}
+                key={drug.codeid}
               >
-                <span>
-                  {item?.times_per_day} раза в день по {item?.quantity_per_time}{" "}
-                  таблетке
-                </span>
-                <RightOutlined
-                  style={{
-                    color:
-                      selectedFrequency === item.codeid ? "gold" : "inherit",
-                  }}
-                />
+                <Flex vertical className={clsx("mb-4")}>
+                  <span>
+                    <b>{drug?.nameid}</b>
+                  </span>
+                  <span>
+                    {drug?.nameid} ({drug?.form_name})
+                  </span>
+                </Flex>
+
+                <Flex vertical>
+                  {/* Продолжительность */}
+                  <Flex
+                    className={clsx(styles.patient_wrap)}
+                    justify="space-between"
+                  >
+                    <span className={clsx(styles.patient_info_fio)}>
+                      <b>Продолжительность</b>
+                    </span>
+                    <DownOutlined onClick={() => setDosesOpen(!dosesOpen)} />
+                  </Flex>
+                  {dosesOpen && (
+                    <Flex vertical>
+                      {frequency?.map((f) => (
+                        <Flex
+                          key={f.codeid}
+                          className={clsx(
+                            styles.item,
+                            selection.frequency === f.codeid &&
+                              styles.item_active
+                          )}
+                          justify="space-between"
+                          onClick={() =>
+                            updateSelection(drug.codeid, "frequency", f.codeid)
+                          }
+                        >
+                          <span>
+                            {f?.times_per_day} раза в день по{" "}
+                            {f?.quantity_per_time} таблетке
+                          </span>
+                          <RightOutlined
+                            style={{
+                              color:
+                                selection.frequency === f.codeid
+                                  ? "gold"
+                                  : "inherit",
+                            }}
+                          />
+                        </Flex>
+                      ))}
+                    </Flex>
+                  )}
+
+                  {/* Кол-во таблеток */}
+                  <Flex
+                    className={clsx(styles.patient_wrap)}
+                    justify="space-between"
+                  >
+                    <span className={clsx(styles.patient_info_fio)}>
+                      <b>Количество таблеток</b>
+                    </span>
+                  </Flex>
+                  <Flex className={clsx(styles.btns)} justify="space-between">
+                    {quantity.map((q) => (
+                      <button
+                        key={q}
+                        className={clsx(styles.btn, {
+                          [styles.active]: selection.quantity === q,
+                        })}
+                        onClick={() =>
+                          updateSelection(drug.codeid, "quantity", q)
+                        }
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </Flex>
+
+                  {/* Кол-во дней */}
+                  <Flex
+                    className={clsx(styles.patient_wrap)}
+                    justify="space-between"
+                  >
+                    <span className={clsx(styles.patient_info_fio)}>
+                      <b>Количество дней</b>
+                    </span>
+                  </Flex>
+                  <Flex className={clsx(styles.btns)} justify="space-between">
+                    {courses?.map((c) => (
+                      <button
+                        key={c?.codeid}
+                        className={clsx(styles.btn, {
+                          [styles.active]: selection.course === c?.codeid,
+                        })}
+                        onClick={() =>
+                          updateSelection(drug.codeid, "course", c?.codeid)
+                        }
+                      >
+                        {c?.count_days}
+                      </button>
+                    ))}
+                  </Flex>
+
+                  {/* Дозировка */}
+                  <Flex
+                    className={clsx(styles.patient_wrap)}
+                    justify="space-between"
+                  >
+                    <span className={clsx(styles.patient_info_fio)}>
+                      <b>Дозировка</b>
+                    </span>
+                  </Flex>
+                  <Flex className={clsx(styles.btns)} justify="space-between">
+                    {dosages?.map((d) => (
+                      <button
+                        key={d?.codeid}
+                        className={clsx(styles.btn, {
+                          [styles.active]: selection.dose === d?.codeid,
+                        })}
+                        onClick={() =>
+                          updateSelection(drug.codeid, "dose", d?.codeid)
+                        }
+                      >
+                        {d?.nameid}
+                      </button>
+                    ))}
+                  </Flex>
+
+                  {/* Приём */}
+                  <Flex
+                    className={clsx(styles.patient_wrap)}
+                    justify="space-between"
+                  >
+                    <span className={clsx(styles.patient_info_fio)}>
+                      <b>Прием</b>
+                    </span>
+                  </Flex>
+                  <Flex
+                    className={clsx(styles.btns, "mb-2")}
+                    justify="space-between"
+                  >
+                    {reception.map((r) => (
+                      <button
+                        key={r}
+                        className={clsx(styles.btn, {
+                          [styles.active]: selection.time === r,
+                        })}
+                        onClick={() => updateSelection(drug.codeid, "time", r)}
+                      >
+                        {r}
+                      </button>
+                    ))}
+                  </Flex>
+                </Flex>
               </Flex>
-            ))}
-          </Flex>
-        )}
+            );
+          })}
+        </div>
 
-        <Flex className={clsx(styles.patient_wrap)} justify="space-between">
-          <span className={clsx(styles.patient_info_fio)}>
-            <b>Количество таблеток</b>
-          </span>
-        </Flex>
-        <Flex className={clsx(styles.btns)} justify="space-between">
-          {quantity.map((item) => (
-            <button
-              key={item}
-              className={clsx(styles.btn, {
-                [styles.active]: selectedQuantity === item,
-              })}
-              onClick={() => setSelectedQuantity(item)}
-            >
-              {item}
-            </button>
-          ))}
-        </Flex>
+        <div className={clsx("mb-32")}></div>
 
-        <Flex className={clsx(styles.patient_wrap)} justify="space-between">
-          <span className={clsx(styles.patient_info_fio)}>
-            <b>Количество дней</b>
-          </span>
-        </Flex>
-
-        <Flex className={clsx(styles.btns)} justify="space-between">
-          {courses?.map((item) => (
-            <button
-              key={item?.codeid}
-              className={clsx(styles.btn, {
-                [styles.active]: selectedCourses === item?.codeid,
-              })}
-              onClick={() => setSelectedCourses(item?.codeid)}
-            >
-              {item?.count_days}
-            </button>
-          ))}
-        </Flex>
-
-        <Flex className={clsx(styles.patient_wrap)} justify="space-between">
-          <span className={clsx(styles.patient_info_fio)}>
-            <b>Прием</b>
-          </span>
-        </Flex>
-        <Flex className={clsx(styles.btns, "mb-2")} justify="space-between">
-          {reception.map((item) => (
-            <button
-              key={item}
-              className={clsx(styles.btn, {
-                [styles.active]: setSelectedTime === item,
-              })}
-              onClick={() => setSelectedTime(item)}
-            >
-              {item}
-            </button>
-          ))}
-        </Flex>
-
-        <div className={clsx(styles.create_btn_wrap, "container w-full")}>
+        <div className={clsx(styles.create_btn_wrap, "container w-full ")}>
           <button
-            className={clsx(styles.create_btn)}
+            disabled={disabled}
+            className={clsx(
+              disabled ? styles.create_btn_dis : styles.create_btn
+            )}
             onClick={() => onFinish()}
           >
+            {disabled && <span>Выберете все пункты</span>}
             Продолжить
           </button>
         </div>

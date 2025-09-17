@@ -1,19 +1,32 @@
-import { Empty, Flex, Spin } from "antd";
+import { Empty, Flex, Input, Spin } from "antd";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { patients } from "../../data";
 import { AddPatientModal, PatientItem } from "../../components";
 
 import clsx from "clsx";
 import styles from "./PatientsPage.module.scss";
 import { useGetPatientsQuery } from "../../store";
+import { SearchOutlined } from "@ant-design/icons";
 
 export const PatientsPage = () => {
   const navigate = useNavigate();
-
-  const { data, isLoading, isFetching } = useGetPatientsQuery();
+  const [search, setSearch] = useState("");
   const [openAdd, setOpenAdd] = useState(false);
+
+  const { data: patients, isLoading, isFetching } = useGetPatientsQuery();
+
+  const filterPatients = useMemo(() => {
+    return patients
+      ?.slice()
+      ?.sort((a, b) => a.fio.localeCompare(b.fio))
+      ?.filter((item) => item.fio.toLowerCase().includes(search.toLowerCase()));
+  }, [patients, search]);
+
+  const navPatient = (item) => {
+    navigate(`/patient/${item.guid}`);
+    localStorage.removeItem("selectedDrugs");
+  };
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -22,21 +35,30 @@ export const PatientsPage = () => {
           <Flex
             className={clsx(styles.patient_add, "container")}
             justify="space-between"
-            align="center"
+            gap="small"
           >
-            <span>Недавние пациенты</span>
-            <button onClick={() => setOpenAdd(true)}>Добавить пациента</button>
+            <Input
+              prefix={<SearchOutlined />}
+              placeholder="Введите ФИО пациента"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              onClick={() => setOpenAdd(true)}
+              style={{
+                whiteSpace: "nowrap",
+                display: "inline-block",
+              }}
+            >
+              Добавить пациента
+            </button>
           </Flex>
 
-          {data?.length === 0 ? (
+          {filterPatients?.length === 0 ? (
             <Empty />
           ) : (
             <Flex vertical style={{ maxHeight: "600px", overflowY: "auto" }}>
-              {data?.map((item) => (
-                <PatientItem
-                  item={item}
-                  onClick={() => navigate(`/patient/${item.guid}`)}
-                />
+              {filterPatients?.map((item) => (
+                <PatientItem item={item} onClick={() => navPatient(item)} />
               ))}
             </Flex>
           )}

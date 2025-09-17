@@ -16,11 +16,23 @@ export const pharmacyApi = createApi({
       query: (newPharmacy) => ({
         url: "/pharmacy",
         method: "POST",
-        body: { newPharmacy },
+        body: newPharmacy,
+      }),
+      invalidatesTags: ["PharmacyList"],
+    }),
+    updatePharmacy: builder.mutation({
+      query: (pharmacy) => ({
+        url: "/pharmacy",
+        method: "POST",
+        body: pharmacy,
       }),
       invalidatesTags: ["PharmacyList"],
     }),
   }),
 });
 
-export const { useGetPharmacyQuery, useAddPharmacyMutation } = pharmacyApi;
+export const {
+  useGetPharmacyQuery,
+  useAddPharmacyMutation,
+  useUpdatePharmacyMutation,
+} = pharmacyApi;

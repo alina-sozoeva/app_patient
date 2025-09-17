@@ -9,6 +9,7 @@ import { methodUseApi } from "./methodUse";
 import { prescriptionApi } from "./prescription";
 import { recipeItemApi } from "./recipeItem";
 import { coursesApi } from "./courses";
+import { userSlices } from "./slices";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     [prescriptionApi.reducerPath]: prescriptionApi.reducer,
     [recipeItemApi.reducerPath]: recipeItemApi.reducer,
     [coursesApi.reducerPath]: coursesApi.reducer,
+    user: userSlices.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([
