@@ -12,6 +12,21 @@ export const prescriptionApi = createApi({
       }),
       providesTags: ["PrescriptionList"],
     }),
+    getRecipe: builder.query({
+      query: (patientId) => ({
+        url: "/recipe",
+        method: "GET",
+        params: patientId,
+      }),
+      providesTags: ["RecipeList"],
+    }),
+    getRecipeItem: builder.query({
+      query: (prescriptionId) => ({
+        url: `/recipe-item?prescriptionId=${prescriptionId}`,
+        method: "GET",
+      }),
+      providesTags: ["RecipeItemList"],
+    }),
     addPrescription: builder.mutation({
       query: (newPrescription) => ({
         url: "/prescription",
@@ -26,7 +41,7 @@ export const prescriptionApi = createApi({
         method: "POST",
         body: newPrescription,
       }),
-      invalidatesTags: ["PrescriptionList"],
+      invalidatesTags: ["PrescriptionList", "RecipeItemList", "RecipeList"],
     }),
   }),
 });

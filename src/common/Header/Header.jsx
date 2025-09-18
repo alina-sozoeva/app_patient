@@ -58,7 +58,7 @@ export const Header = () => {
       <section className={clsx(styles.header_content, "container")}>
         {path === pathname.home && (
           <Flex justify="space-between" align="center">
-            <MenuOutlined style={{ width: "60px" }} />
+            {/* <MenuOutlined style={{ width: "60px" }} /> */}
             <span>LOGO</span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>

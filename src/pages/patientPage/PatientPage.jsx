@@ -22,6 +22,8 @@ import {
   useGetRecipeQuery,
 } from "../../store";
 
+import QRCode from "qrcode";
+
 import styles from "./PatientPage.module.scss";
 import clsx from "clsx";
 
@@ -54,34 +56,145 @@ export const PatientPage = () => {
     (item) => +item?.patient_codeid === +findPatient?.codeid
   );
 
+  console.log(findRecipe, "findRecipe");
+
   const mappedRecipes = recipeItem?.filter((item) =>
     findRecipe?.some((presc) => presc?.codeid === item?.prescription_codeid)
   );
 
-  const mappedRecipesWithNames = mappedRecipes?.map((item) => {
-    const drug = drugs?.find((d) => d.codeid === +item.drug_codeid);
-    const dose = doses?.find((d) => d.codeid === +item.dose_codeid);
-    const method = methodUse?.find((m) => m.codeid === +item.method_use_codeid);
-    const course = courses?.find((c) => c.codeid === +item.course_codeid);
-    const freq = frequency?.find((f) => f.codeid === +item.frequency_codeid);
+  const groupedRecipes = mappedRecipes?.reduce((acc, item) => {
+    const key = item?.prescription_codeid;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(item);
+    return acc;
+  }, {});
 
-    return {
-      ...item,
-      drugName: drug?.nameid || "",
-      doseName: dose?.nameid || "",
-      methodName: method?.nameid || "",
-      courseName: course?.count_days || "",
-      frequencyName: freq?.times_per_day
-        ? `${freq.times_per_day} раза в день по ${
-            freq.quantity_per_time || 1
-          } таблетке`
-        : "",
-    };
-  });
+  const mappedRecipesWithNames = Object.entries(groupedRecipes || {}).map(
+    ([prescription_codeid, items]) => ({
+      prescription_codeid,
+      items: items.map((item) => {
+        const drug = drugs?.find((d) => d.codeid === +item.drug_codeid);
+        const dose = doses?.find((d) => d.codeid === +item.dose_codeid);
+        const method = methodUse?.find(
+          (m) => m.codeid === +item.method_use_codeid
+        );
+        const course = courses?.find((c) => c.codeid === +item.course_codeid);
+        const freq = frequency?.find(
+          (f) => f.codeid === +item.frequency_codeid
+        );
 
-  console.log(mappedRecipesWithNames, "mappedRecipesWithNames");
+        return {
+          ...item,
+          drugName: drug?.nameid || "",
+          doseName: dose?.nameid || "",
+          methodName: method?.nameid || "",
+          courseName: course?.count_days || "",
+          frequencyName: freq?.times_per_day
+            ? `${freq.times_per_day} раза в день по ${
+                freq.quantity_per_time || 1
+              } таблетке`
+            : "",
+        };
+      }),
+    })
+  );
 
   const pharmacyItem = pharmacy?.[0];
+
+  const handlePrint = async (prescription) => {
+    let iframe = document.getElementById("print-iframe");
+    if (!iframe) {
+      iframe = document.createElement("iframe");
+      iframe.style.position = "fixed";
+      iframe.style.right = "0";
+      iframe.style.bottom = "0";
+      iframe.style.width = "0";
+      iframe.style.height = "0";
+      iframe.style.border = "0";
+      iframe.id = "print-iframe";
+      document.body.appendChild(iframe);
+    }
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+
+    let qrData = `${prescription.prescription_codeid}-${Math.random()
+      .toString(36)
+      .substring(2, 10)}`;
+    const qrUrl = await QRCode.toDataURL(qrData);
+
+    let html = `
+    <html>
+      <head>
+        <title>Печать рецепта</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h2 { margin-bottom: 20px; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+          th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+          th { background-color: #f4f4f4; }
+          img { display: block; margin: 20px auto; width: 150px; height: 150px; }
+        </style>
+      </head>
+      <body>
+        <h2>Рецепт №${prescription.prescription_codeid}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Лекарство</th>
+              <th>Форма</th>
+              <th>Частота</th>
+              <th>Прием</th>
+              <th>Курс (дни)</th>
+            </tr>
+          </thead>
+          <tbody>
+  `;
+
+    prescription.items.forEach((item) => {
+      html += `
+      <tr>
+        <td>${item.drugName} ${item.doseName}</td>
+        <td>${item.form_name || "-"}</td>
+        <td>${item.frequencyName}</td>
+        <td>
+          ${item.time_after_food ? "после еды " : ""} 
+          ${item.time_before_food ? "до еды " : ""} 
+          ${item.time_during_food ? "во время еды " : ""}
+        </td>
+        <td>${item.courseName}</td>
+      </tr>
+    `;
+    });
+
+    html += `
+          </tbody>
+        </table>
+
+        <img src="${qrUrl}" />
+      </body>
+    </html>
+  `;
+
+    doc.write(html);
+    doc.close();
+
+    const images = doc.querySelectorAll("img");
+    await Promise.all(
+      Array.from(images).map(
+        (img) =>
+          new Promise((resolve) => {
+            if (img.complete) resolve();
+            else img.onload = img.onerror = resolve;
+          })
+      )
+    );
+
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  };
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -181,9 +294,49 @@ export const PatientPage = () => {
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
 
-          <Flex vertical style={{ maxHeight: "380px", overflowY: "auto" }}>
+          <Flex
+            className={clsx("mt-2")}
+            vertical
+            style={{ maxHeight: "380px", overflowY: "auto", gap: "16px" }}
+          >
             {mappedRecipesWithNames?.map((item) => (
-              <MedHistoryItem item={item} />
+              <div className={clsx(styles.recipeCard)}>
+                <h3>Рецепт №{item.prescription_codeid}</h3>
+                <table className={clsx(styles.recipeTable)}>
+                  <thead>
+                    <tr>
+                      <th>Лекарство</th>
+                      <th>Дозировка</th>
+                      <th>Прием</th>
+                      <th>Курс</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {item.items.map((med) => (
+                      <tr key={med.codeid}>
+                        <td>{med.drugName}</td>
+                        <td>{med.doseName}</td>
+                        <td>
+                          {med.time_before_food && "до еды "}
+                          {med.time_during_food && "во время еды "}
+                          {med.time_after_food && "после еды "}
+                        </td>
+                        <td>{med.courseName} д.</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <Flex
+                  justify="end"
+                  gap="8px"
+                  className={clsx(styles.recipeActions)}
+                >
+                  <button onClick={() => handlePrint(item)}>Сохранить</button>
+                  <button>SMS</button>
+                  <button>Почта</button>
+                </Flex>
+              </div>
             ))}
           </Flex>
 

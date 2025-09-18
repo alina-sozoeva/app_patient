@@ -72,7 +72,7 @@ export const NewRxPage = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </Flex>
-        <Flex className={clsx(styles.favorite_header)} justify="space-between">
+        {/* <Flex className={clsx(styles.favorite_header)} justify="space-between">
           <span>Шаблоны</span>
           <DownOutlined
             rotate={favOpen && 180}
@@ -85,7 +85,7 @@ export const NewRxPage = () => {
               <FavoriteItem item={item} />
             ))}
           </Flex>
-        )}
+        )} */}
         <Flex className={clsx(styles.favorite_header)} justify="space-between">
           <span>Медикаменты</span>
           <DownOutlined
@@ -106,10 +106,19 @@ export const NewRxPage = () => {
         )}
         <div className={clsx("container", styles.create_btn_wrap)}>
           <button
-            className={clsx(styles.create_btn)}
+            disabled={selectedDrugs.length === 0}
+            className={clsx(
+              selectedDrugs.length === 0
+                ? styles.create_btn_dis
+                : styles.create_btn
+            )}
             onClick={() => navigate(`/rx-details/${guid}`)}
           >
-            Продолжить
+            {selectedDrugs.length === 0 ? (
+              <span>Выберете медикамент</span>
+            ) : (
+              "Продолжить"
+            )}
           </button>
         </div>
       </section>

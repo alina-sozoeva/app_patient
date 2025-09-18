@@ -43,6 +43,8 @@ export const RxDetailsPage = () => {
   const findPatient = patients?.find((item) => item.guid === guid);
   const storedDrugs = JSON.parse(localStorage.getItem("selectedDrugs")) || [];
 
+  console.log(findPatient, "findPatient");
+
   const updateSelection = (drugId, field, value) => {
     setDrugSelections((prev) => ({
       ...prev,
@@ -52,6 +54,7 @@ export const RxDetailsPage = () => {
       },
     }));
   };
+  console.log(drugSelections, "drugSelections");
 
   const onFinish = async () => {
     const patient = {
@@ -119,7 +122,7 @@ export const RxDetailsPage = () => {
           </span>
         </Flex>
 
-        <div style={{ maxHeight: "700px", overflowY: "auto" }}>
+        <div style={{ maxHeight: "660px", overflowY: "auto" }}>
           {storedDrugs.map((drug) => {
             const selection = drugSelections[drug.codeid] || {};
             return (
@@ -219,10 +222,10 @@ export const RxDetailsPage = () => {
                       <button
                         key={c?.codeid}
                         className={clsx(styles.btn, {
-                          [styles.active]: selection.course === c?.codeid,
+                          [styles.active]: selection.course === c?.count_days,
                         })}
                         onClick={() =>
-                          updateSelection(drug.codeid, "course", c?.codeid)
+                          updateSelection(drug.codeid, "course", c?.count_days)
                         }
                       >
                         {c?.count_days}
@@ -244,10 +247,10 @@ export const RxDetailsPage = () => {
                       <button
                         key={d?.codeid}
                         className={clsx(styles.btn, {
-                          [styles.active]: selection.dose === d?.codeid,
+                          [styles.active]: selection.dose === d?.nameid,
                         })}
                         onClick={() =>
-                          updateSelection(drug.codeid, "dose", d?.codeid)
+                          updateSelection(drug.codeid, "dose", d?.nameid)
                         }
                       >
                         {d?.nameid}
@@ -296,8 +299,7 @@ export const RxDetailsPage = () => {
             )}
             onClick={() => onFinish()}
           >
-            {disabled && <span>Выберете все пункты</span>}
-            Продолжить
+            {disabled ? <span>Выберете все пункты</span> : "Создать рецепт"}
           </button>
         </div>
       </section>

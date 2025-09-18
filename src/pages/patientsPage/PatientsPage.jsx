@@ -17,10 +17,19 @@ export const PatientsPage = () => {
   const { data: patients, isLoading, isFetching } = useGetPatientsQuery();
 
   const filterPatients = useMemo(() => {
-    return patients
-      ?.slice()
-      ?.sort((a, b) => a.fio.localeCompare(b.fio))
-      ?.filter((item) => item.fio.toLowerCase().includes(search.toLowerCase()));
+    if (!patients) return [];
+
+    const filtered = patients.filter((item) =>
+      item.fio.toLowerCase().includes(search.toLowerCase())
+    );
+
+    const sortedByFio = filtered.sort((a, b) => a.fio.localeCompare(b.fio));
+
+    const last10ByCodeid = sortedByFio
+      .sort((a, b) => b.codeid - a.codeid)
+      .slice(0, 10);
+
+    return last10ByCodeid;
   }, [patients, search]);
 
   const navPatient = (item) => {

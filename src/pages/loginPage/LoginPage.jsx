@@ -41,7 +41,7 @@ export const LoginPage = () => {
         className={styles.form}
       >
         <Typography.Title level={3} className={styles.formTitle}>
-          Войти
+          Авторизоваться
         </Typography.Title>
         <Form.Item
           name="login"
