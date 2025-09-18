@@ -54,7 +54,6 @@ export const RxDetailsPage = () => {
       },
     }));
   };
-  console.log(drugSelections, "drugSelections");
 
   const onFinish = async () => {
     const patient = {
@@ -92,7 +91,7 @@ export const RxDetailsPage = () => {
 
     localStorage.removeItem("selectedDrugs");
 
-    navigate(`/patient/${guid}`);
+    navigate(`/patient/${guid}`, { state: { refresh: true } });
   };
 
   const disabled = storedDrugs.some((drug) => {
@@ -101,7 +100,7 @@ export const RxDetailsPage = () => {
   });
 
   return (
-    <main className={clsx(" relative")}>
+    <main className={clsx(" relative ")} style={{ marginBottom: "80px" }}>
       <section className={clsx("container ")}>
         <Flex
           className={clsx(styles.patient_wrap)}
@@ -288,8 +287,6 @@ export const RxDetailsPage = () => {
             );
           })}
         </div>
-
-        <div className={clsx("mb-32")}></div>
 
         <div className={clsx(styles.create_btn_wrap, "container w-full ")}>
           <button

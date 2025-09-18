@@ -3,7 +3,12 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const prescriptionApi = createApi({
   reducerPath: "prescriptionApi",
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_MAIN_URL }),
-  tagTypes: ["PrescriptionList"],
+  tagTypes: [
+    "PrescriptionList",
+    "RecipeItemList",
+    "RecipeList",
+    "PatientsList",
+  ],
   endpoints: (builder) => ({
     getPrescription: builder.query({
       query: () => ({
@@ -11,6 +16,13 @@ export const prescriptionApi = createApi({
         method: "GET",
       }),
       providesTags: ["PrescriptionList"],
+    }),
+    getPatients: builder.query({
+      query: () => ({
+        url: "/patient",
+        method: "GET",
+      }),
+      providesTags: ["PatientsList"],
     }),
     getRecipe: builder.query({
       query: (patientId) => ({
@@ -27,21 +39,23 @@ export const prescriptionApi = createApi({
       }),
       providesTags: ["RecipeItemList"],
     }),
-    addPrescription: builder.mutation({
-      query: (newPrescription) => ({
-        url: "/prescription",
-        method: "POST",
-        body: newPrescription,
-      }),
-      invalidatesTags: ["PrescriptionList"],
-    }),
+    // addPrescription: builder.mutation({
+    //   query: (newPrescription) => ({
+    //     url: "/prescription",
+    //     method: "POST",
+    //     body: newPrescription,
+    //   }),
+    //   invalidatesTags: ["PrescriptionList"],
+    // }),
     addPatientPrescription: builder.mutation({
       query: (newPrescription) => ({
         url: "/patientWithPrescription",
         method: "POST",
         body: newPrescription,
       }),
-      invalidatesTags: ["PrescriptionList", "RecipeItemList", "RecipeList"],
+      invalidatesTags: (result, error, newPrescription) => [
+        { type: "RecipeList", id: `LIST-${newPrescription.patient.guid}` },
+      ],
     }),
   }),
 });

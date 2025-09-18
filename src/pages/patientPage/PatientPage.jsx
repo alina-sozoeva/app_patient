@@ -1,15 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { Empty, Flex, Spin } from "antd";
 
 import { DownOutlined, PhoneFilled } from "@ant-design/icons";
 import { gender } from "../../enums";
-import { useState } from "react";
-import {
-  EditFrequencyModal,
-  EditPatientModal,
-  MedHistoryItem,
-} from "../../components";
+import { useEffect, useState } from "react";
+import { EditFrequencyModal, EditPatientModal } from "../../components";
 
 import {
   useGetCoursesQuery,
@@ -71,8 +67,9 @@ export const PatientPage = () => {
     return acc;
   }, {});
 
-  const mappedRecipesWithNames = Object.entries(groupedRecipes || {}).map(
-    ([prescription_codeid, items]) => ({
+  const mappedRecipesWithNames = Object.entries(groupedRecipes || {})
+    .sort((a, b) => +b[0] - +a[0])
+    .map(([prescription_codeid, items]) => ({
       prescription_codeid,
       items: items.map((item) => {
         const drug = drugs?.find((d) => d.codeid === +item.drug_codeid);
@@ -98,8 +95,9 @@ export const PatientPage = () => {
             : "",
         };
       }),
-    })
-  );
+    }));
+
+  console.log(findPatient?.codeid, "findPatient?.patient_codeid");
 
   const pharmacyItem = pharmacy?.[0];
 
@@ -120,9 +118,8 @@ export const PatientPage = () => {
     const doc = iframe.contentWindow.document;
     doc.open();
 
-    let qrData = `${prescription.prescription_codeid}-${Math.random()
-      .toString(36)
-      .substring(2, 10)}`;
+    // Генерация QR с URL
+    const qrData = `/patient/${findPatient?.codeid}/${prescription?.prescription_codeid}`;
     const qrUrl = await QRCode.toDataURL(qrData);
 
     let html = `
@@ -130,10 +127,9 @@ export const PatientPage = () => {
       <head>
         <title>Печать рецепта</title>
         <style>
-          body { font-family: Arial, sans-serif; padding: 20px; }
-          h2 { margin-bottom: 20px; }
+          body { font-family: Arial; padding: 20px; }
           table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-          th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+          th, td { border: 1px solid #ccc; padding: 8px; }
           th { background-color: #f4f4f4; }
           img { display: block; margin: 20px auto; width: 150px; height: 150px; }
         </style>
@@ -144,8 +140,7 @@ export const PatientPage = () => {
           <thead>
             <tr>
               <th>Лекарство</th>
-              <th>Форма</th>
-              <th>Частота</th>
+              <th>Доза</th>
               <th>Прием</th>
               <th>Курс (дни)</th>
             </tr>
@@ -158,7 +153,6 @@ export const PatientPage = () => {
       <tr>
         <td>${item.drugName} ${item.doseName}</td>
         <td>${item.form_name || "-"}</td>
-        <td>${item.frequencyName}</td>
         <td>
           ${item.time_after_food ? "после еды " : ""} 
           ${item.time_before_food ? "до еды " : ""} 
@@ -297,7 +291,11 @@ export const PatientPage = () => {
           <Flex
             className={clsx("mt-2")}
             vertical
-            style={{ maxHeight: "380px", overflowY: "auto", gap: "16px" }}
+            style={{
+              maxHeight: "350px",
+              overflowY: "auto",
+              gap: "16px",
+            }}
           >
             {mappedRecipesWithNames?.map((item) => (
               <div className={clsx(styles.recipeCard)}>
@@ -306,7 +304,7 @@ export const PatientPage = () => {
                   <thead>
                     <tr>
                       <th>Лекарство</th>
-                      <th>Дозировка</th>
+                      <th>Доза</th>
                       <th>Прием</th>
                       <th>Курс</th>
                     </tr>
@@ -314,7 +312,12 @@ export const PatientPage = () => {
                   <tbody>
                     {item.items.map((med) => (
                       <tr key={med.codeid}>
-                        <td>{med.drugName}</td>
+                        <td>
+                          <Flex vertical>
+                            <span>{med.drugName}</span>
+                            <span>({med.form_name})</span>
+                          </Flex>
+                        </td>
                         <td>{med.doseName}</td>
                         <td>
                           {med.time_before_food && "до еды "}
