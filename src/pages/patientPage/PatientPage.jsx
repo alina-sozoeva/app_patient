@@ -5,6 +5,7 @@ import { Button, Empty, Flex, Spin } from "antd";
 import {
   CalendarOutlined,
   DownOutlined,
+  EnvironmentOutlined,
   MailOutlined,
   MessageOutlined,
   PhoneFilled,
@@ -327,18 +328,24 @@ export const PatientPage = () => {
                 <Flex vertical>
                   <span className={clsx(styles.title)}>Аптека</span>
                   <span>
-                    <b>Телефон:</b> {pharmacyItem?.nameid}
+                    <b>
+                      <PhoneFilled />
+                    </b>{" "}
+                    {pharmacyItem?.nameid}
                   </span>
                   <span style={{ maxWidth: "160px" }}>
-                    <b>Адрес:</b> {pharmacyItem?.address}
+                    <b>
+                      <EnvironmentOutlined />
+                    </b>{" "}
+                    {pharmacyItem?.address}
                   </span>
                 </Flex>
-                <span
+                {/* <span
                   className={clsx(styles.act_btn)}
                   onClick={() => setOpenEditFar(true)}
                 >
                   Изменить
-                </span>
+                </span> */}
               </Flex>
             )}
             <div
