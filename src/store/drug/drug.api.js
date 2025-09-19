@@ -6,9 +6,10 @@ export const drugApi = createApi({
   tagTypes: ["DrugList"],
   endpoints: (builder) => ({
     getDrug: builder.query({
-      query: () => ({
+      query: (search) => ({
         url: "/drug",
         method: "GET",
+        params: search,
       }),
       providesTags: ["DrugList"],
     }),

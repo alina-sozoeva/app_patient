@@ -67,6 +67,14 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: pathname.other,
+        element: (
+          <PrivateRoute>
+            <Pages.WIPPage />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 ]);

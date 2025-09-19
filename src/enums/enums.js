@@ -4,6 +4,7 @@ export const gender = {
 };
 
 export const pathname = {
+  other: "*",
   home: "/",
   patients: "/patients",
   patient: "/patient/:guid",

@@ -17,10 +17,12 @@ import { useState } from "react";
 import ruRU from "antd/locale/ru_RU";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
+import { useNavigate } from "react-router-dom";
 
 dayjs.locale("ru");
 
 export const AddPatientModal = ({ open, onCancel, title }) => {
+  const navigate = useNavigate();
   const [form] = useForm();
   const [addPatient] = useAddPatientMutation();
 
@@ -37,16 +39,25 @@ export const AddPatientModal = ({ open, onCancel, title }) => {
     setCheckedMan(false);
   };
 
-  const onFinish = (values) => {
-    addPatient({
-      fio: values.fio,
-      birth_date: dayjs(values.birth_date).format("YYYY-MM-DD"),
-      gender: checkedMan ? 1 : 0,
-      phone: values?.phone,
-      email: values?.email,
-    });
-    onCancel();
-    form.resetFields();
+  const onFinish = async (values) => {
+    try {
+      const result = await addPatient({
+        fio: values.fio,
+        birth_date: dayjs(values.birth_date).format("YYYY-MM-DD"),
+        gender: checkedMan ? 1 : 0,
+        phone: values?.phone,
+        email: values?.email,
+      }).unwrap();
+
+      console.log(result);
+
+      navigate(`/patient/${result.guid}`);
+
+      onCancel();
+      form.resetFields();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const onClose = () => {

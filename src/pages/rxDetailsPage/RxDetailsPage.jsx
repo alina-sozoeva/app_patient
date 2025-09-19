@@ -91,7 +91,8 @@ export const RxDetailsPage = () => {
 
     localStorage.removeItem("selectedDrugs");
 
-    navigate(`/patient/${guid}`, { state: { refresh: true } });
+    navigate(`/patient/${guid}`);
+    window.location.reload();
   };
 
   const disabled = storedDrugs.some((drug) => {
@@ -296,7 +297,7 @@ export const RxDetailsPage = () => {
             )}
             onClick={() => onFinish()}
           >
-            {disabled ? <span>Выберете все пункты</span> : "Создать рецепт"}
+            {disabled ? <span>Выберите все пункты</span> : "Создать рецепт"}
           </button>
         </div>
       </section>

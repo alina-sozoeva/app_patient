@@ -1,8 +1,8 @@
-import { Flex, Input } from "antd";
+import { Empty, Flex, Input } from "antd";
 
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { FavoriteItem, SearchItem } from "../../components";
+import { SearchItem } from "../../components";
 
 import styles from "./NewRxPage.module.scss";
 import clsx from "clsx";
@@ -10,38 +10,20 @@ import clsx from "clsx";
 import { useGetDrugQuery } from "../../store";
 import { useNavigate, useParams } from "react-router-dom";
 
-const rxsFav = [
-  {
-    id: 1,
-    name: "Метформин",
-    strength: "500 мг",
-    description: "2 раза в день",
-    time: "утром и вечером",
-  },
-  {
-    id: 2,
-    name: "Ибупрофен",
-    strength: "200 мг",
-    description: "по необходимости, до 3 раз в день",
-    time: "после еды",
-  },
-];
-
 export const NewRxPage = () => {
   const { guid } = useParams();
   const navigate = useNavigate();
 
-  const [favOpen, setFavOpen] = useState(true);
   const [rxsOpen, setRxsOpen] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedDrugs, setSelectedDrugs] = useState(
     () => JSON.parse(localStorage.getItem("selectedDrugs")) || []
   );
 
-  const { data: drugs } = useGetDrugQuery();
+  const { data: drugs } = useGetDrugQuery({ search });
 
-  const filterDrugs = drugs?.filter((item) =>
-    item.nameid.toLowerCase().includes(search.toLowerCase())
+  const sortedDrugs = [...(drugs || [])].sort((a, b) =>
+    a.nameid.localeCompare(b.nameid)
   );
 
   const toggleDrug = (drug) => {
@@ -58,6 +40,9 @@ export const NewRxPage = () => {
     localStorage.setItem("selectedDrugs", JSON.stringify(updated));
   };
 
+  const displayedDrugs =
+    search.length >= 3 ? sortedDrugs : sortedDrugs.slice(0, 10);
+
   return (
     <main>
       <section className={clsx(styles.main, "container")}>
@@ -72,20 +57,7 @@ export const NewRxPage = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </Flex>
-        {/* <Flex className={clsx(styles.favorite_header)} justify="space-between">
-          <span>Шаблоны</span>
-          <DownOutlined
-            rotate={favOpen && 180}
-            onClick={() => setFavOpen(!favOpen)}
-          />
-        </Flex>
-        {favOpen && (
-          <Flex vertical>
-            {rxsFav.map((item) => (
-              <FavoriteItem item={item} />
-            ))}
-          </Flex>
-        )} */}
+
         <Flex className={clsx(styles.favorite_header)} justify="space-between">
           <span>Медикаменты</span>
           <DownOutlined
@@ -93,9 +65,27 @@ export const NewRxPage = () => {
             onClick={() => setRxsOpen(!rxsOpen)}
           />
         </Flex>
+
+        {search.length > 0 && search.length < 3 && (
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "8px",
+              fontSize: "14px",
+              color: "#999",
+            }}
+          >
+            Введите хотя бы 3 символа для начала поиска
+          </div>
+        )}
+
+        {displayedDrugs?.length === 0 && search.length > 3 && (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        )}
+
         {(rxsOpen || search !== "") && (
           <Flex vertical style={{ maxHeight: "400px", overflowY: "auto" }}>
-            {filterDrugs?.map((item) => (
+            {displayedDrugs?.map((item) => (
               <SearchItem
                 item={item}
                 selectedDrugs={selectedDrugs}
@@ -115,7 +105,7 @@ export const NewRxPage = () => {
             onClick={() => navigate(`/rx-details/${guid}`)}
           >
             {selectedDrugs.length === 0 ? (
-              <span>Выберете медикамент</span>
+              <span>Выберите медикамент</span>
             ) : (
               "Продолжить"
             )}

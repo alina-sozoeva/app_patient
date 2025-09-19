@@ -1,11 +1,4 @@
-import { useState } from "react";
-
 import { Flex } from "antd";
-import { RiFileEditLine } from "react-icons/ri";
-import { BsStopwatch } from "react-icons/bs";
-import { FaArrowRotateRight } from "react-icons/fa6";
-import { HiOutlineChatAlt2 } from "react-icons/hi";
-import { GiMedicines } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
 
 import rx from "../../assets/rx.png";
@@ -14,30 +7,37 @@ import styles from "./HomePage.module.scss";
 import clsx from "clsx";
 import { pathname } from "../../enums";
 
+import {
+  HiOutlineDocumentText,
+  HiOutlineClipboardDocumentList,
+  HiOutlineBell,
+  HiOutlineBeaker,
+} from "react-icons/hi2";
+
 const acts = [
   {
     key: 1,
-    icon: <BsStopwatch />,
-    title: "Ожидание приема",
-    gender: "male",
+    icon: <HiOutlineDocumentText />,
+    title: "Выписанные рецепты",
+    path: "/written",
   },
   {
     key: 2,
-    icon: <FaArrowRotateRight />,
-    title: "Продление",
-    gender: "male",
+    icon: <HiOutlineClipboardDocumentList />,
+    title: "Отчеты",
+    path: "/reports",
   },
   {
     key: 3,
-    icon: <HiOutlineChatAlt2 />,
-    title: "Безопасный чат",
-    gender: "male",
+    icon: <HiOutlineBell />,
+    title: "Уведомления",
+    path: "/notifications",
   },
   {
     key: 4,
-    icon: <GiMedicines />,
+    icon: <HiOutlineBeaker />,
     title: "ПДМП",
-    gender: "male",
+    path: "/other",
   },
 ];
 
@@ -67,6 +67,7 @@ export const HomePage = () => {
             justify="center"
             gap="middle"
             className={clsx(styles.act)}
+            onClick={() => navigate(item.path)}
           >
             {item.icon}
             <span>{item.title}</span>

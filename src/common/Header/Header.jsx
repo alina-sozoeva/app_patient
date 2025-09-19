@@ -81,7 +81,7 @@ export const Header = () => {
               onClick={() => navigate("/")}
               style={{ width: "60px" }}
             />
-            <span>Недавние пациенты</span>
+            <span>10 последних пациентов</span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
                 <Space>

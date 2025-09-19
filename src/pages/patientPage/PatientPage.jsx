@@ -1,8 +1,17 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { Empty, Flex, Spin } from "antd";
+import { Button, Empty, Flex, Spin } from "antd";
 
-import { DownOutlined, PhoneFilled } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  DownOutlined,
+  MailOutlined,
+  MessageOutlined,
+  PhoneFilled,
+  PhoneOutlined,
+  SaveOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { gender } from "../../enums";
 import { useEffect, useState } from "react";
 import { EditFrequencyModal, EditPatientModal } from "../../components";
@@ -26,7 +35,14 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
 import { useGetPharmacyQuery } from "../../store/pharmacy/pharmacy.api";
+import { MdSaveAlt } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { users } from "../../data";
+import utc from "dayjs/plugin/utc";
+import { FaUserDoctor } from "react-icons/fa6";
+
 dayjs.locale("ru");
+dayjs.extend(utc);
 
 export const PatientPage = () => {
   const { guid } = useParams();
@@ -41,10 +57,13 @@ export const PatientPage = () => {
   const { data: recipe } = useGetRecipeQuery();
   const { data: recipeItem } = useGetRecipeItemQuery();
   const { data: doses } = useGetDoseQuery();
-  const { data: drugs } = useGetDrugQuery();
+  const { data: drugs } = useGetDrugQuery({});
   const { data: frequency } = useGetFrequencyQuery();
   const { data: methodUse } = useGetMethodUseQuery();
   const { data: courses } = useGetCoursesQuery();
+
+  const userId = useSelector((state) => state.user.userId);
+  const findUser = users.find((item) => item.id === +userId);
 
   const findPatient = patients?.find((item) => item?.guid === guid);
 
@@ -69,33 +88,40 @@ export const PatientPage = () => {
 
   const mappedRecipesWithNames = Object.entries(groupedRecipes || {})
     .sort((a, b) => +b[0] - +a[0])
-    .map(([prescription_codeid, items]) => ({
-      prescription_codeid,
-      items: items.map((item) => {
-        const drug = drugs?.find((d) => d.codeid === +item.drug_codeid);
-        const dose = doses?.find((d) => d.codeid === +item.dose_codeid);
-        const method = methodUse?.find(
-          (m) => m.codeid === +item.method_use_codeid
-        );
-        const course = courses?.find((c) => c.codeid === +item.course_codeid);
-        const freq = frequency?.find(
-          (f) => f.codeid === +item.frequency_codeid
-        );
+    .map(([prescription_codeid, items]) => {
+      const recipeData = findRecipe?.find(
+        (r) => +r.codeid === +prescription_codeid
+      );
 
-        return {
-          ...item,
-          drugName: drug?.nameid || "",
-          doseName: dose?.nameid || "",
-          methodName: method?.nameid || "",
-          courseName: course?.count_days || "",
-          frequencyName: freq?.times_per_day
-            ? `${freq.times_per_day} раза в день по ${
-                freq.quantity_per_time || 1
-              } таблетке`
-            : "",
-        };
-      }),
-    }));
+      return {
+        prescription_codeid,
+        created_at: recipeData?.created_at,
+        items: items.map((item) => {
+          const drug = drugs?.find((d) => d.codeid === +item.drug_codeid);
+          const dose = doses?.find((d) => d.codeid === +item.dose_codeid);
+          const method = methodUse?.find(
+            (m) => m.codeid === +item.method_use_codeid
+          );
+          const course = courses?.find((c) => c.codeid === +item.course_codeid);
+          const freq = frequency?.find(
+            (f) => f.codeid === +item.frequency_codeid
+          );
+
+          return {
+            ...item,
+            drugName: drug?.nameid || "",
+            doseName: dose?.nameid || "",
+            methodName: method?.nameid || "",
+            courseName: course?.count_days || "",
+            frequencyName: freq?.times_per_day
+              ? `${freq.times_per_day} раза в день по ${
+                  freq.quantity_per_time || 1
+                } таблетке`
+              : "",
+          };
+        }),
+      };
+    });
 
   console.log(findPatient?.codeid, "findPatient?.patient_codeid");
 
@@ -118,59 +144,126 @@ export const PatientPage = () => {
     const doc = iframe.contentWindow.document;
     doc.open();
 
-    // Генерация QR с URL
     const qrData = `/patient/${findPatient?.codeid}/${prescription?.prescription_codeid}`;
     const qrUrl = await QRCode.toDataURL(qrData);
 
     let html = `
-    <html>
-      <head>
-        <title>Печать рецепта</title>
-        <style>
-          body { font-family: Arial; padding: 20px; }
-          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-          th, td { border: 1px solid #ccc; padding: 8px; }
-          th { background-color: #f4f4f4; }
-          img { display: block; margin: 20px auto; width: 150px; height: 150px; }
-        </style>
-      </head>
-      <body>
-        <h2>Рецепт №${prescription.prescription_codeid}</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Лекарство</th>
-              <th>Доза</th>
-              <th>Прием</th>
-              <th>Курс (дни)</th>
-            </tr>
-          </thead>
-          <tbody>
-  `;
+<html>
+  <head>
+    <title>Рецепт</title>
+    <style>
+      body { 
+        font-family: 'Times New Roman', Georgia, serif; 
+        padding: 30px; 
+        color: #000;
+      }
+      h1, h2 { 
+        text-align: center; 
+        margin: 0;
+      }
+      h2 { 
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: normal;
+      }
+      .header {
+        display: flex; 
+        justify-content: space-between; 
+        margin-bottom: 30px;
+      }
+      .header div {
+        font-size: 14px;
+      }
+      table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+      th, td { 
+        border: 1px solid #000; 
+        padding: 6px 10px; 
+        text-align: left;
+      }
+      th { 
+        background-color: #f0f0f0; 
+      }
+      .qr {
+        text-align: center; 
+        margin-top: 20px;
+      }
+      .qr img {
+        width: 120px; 
+        height: 120px;
+      }
+      .footer {
+        font-size: 12px;
+        text-align: center;
+        margin-top: 10px;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+  <h1 style="font-size: 24px; font-weight: bold; text-align: left; margin-bottom: 20px;">LOGO</h1>
 
-    prescription.items.forEach((item) => {
-      html += `
-      <tr>
-        <td>${item.drugName} ${item.doseName}</td>
-        <td>${item.form_name || "-"}</td>
-        <td>
-          ${item.time_after_food ? "после еды " : ""} 
-          ${item.time_before_food ? "до еды " : ""} 
-          ${item.time_during_food ? "во время еды " : ""}
-        </td>
-        <td>${item.courseName}</td>
-      </tr>
-    `;
-    });
+    <h1>РЕЦЕПТ</h1>
 
-    html += `
-          </tbody>
-        </table>
+    <div class="header">
+      <div>
+        <p><strong>Пациент:</strong> ${findPatient?.fio}</p>
+        <p><strong>Дата рождения:</strong> ${dayjs(
+          findPatient?.birth_date
+        ).format("DD.MM.YYYY")}</p>
+      </div>
+      <div>
+        <p><strong>Врач:</strong> ${findUser?.name || "-"}</p>
+        <p><strong>Дата создания:</strong> ${dayjs
+          .utc(prescription.created_at)
+          .format("DD.MM.YYYY HH:mm")}</p>
+      </div>
+    </div>
 
-        <img src="${qrUrl}" />
-      </body>
-    </html>
-  `;
+    <table>
+      <thead>
+        <tr>
+          <th>Лекарство</th>
+          <th>Форма</th>
+          <th>Приём</th>
+          <th>Курс (дни)</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${prescription.items
+          .map(
+            (item) => `
+          <tr>
+            <td>${item.drugName} ${item.doseName}</td>
+            <td>${item.form_name || "-"}</td>
+            <td>
+              ${item.time_before_food ? "до еды " : ""}
+              ${item.time_during_food ? "во время еды " : ""}
+              ${item.time_after_food ? "после еды" : ""}
+            </td>
+            <td>${item.courseName}</td>
+          </tr>
+        `
+          )
+          .join("")}
+      </tbody>
+    </table>
+
+    <div class="qr">
+      <img src="${qrUrl}" />
+      <p>Отсканируйте QR-код для получения рецепта</p>
+    </div>
+
+    <div class="footer">
+      Документ сформирован автоматически
+    </div>
+  </body>
+</html>
+`;
 
     doc.write(html);
     doc.close();
@@ -210,31 +303,23 @@ export const PatientPage = () => {
           <Flex vertical className={clsx(styles.patient_about)}>
             <Flex justify="space-between">
               <Flex vertical>
-                <Flex gap="small" className={clsx(styles.patient_info)}>
+                <Flex className={clsx(styles.patient_info, "gap-[3px]")}>
                   <span className={clsx(styles.patient_info_fio)}>
-                    {findPatient?.fio}
+                    {findPatient?.fio},
                   </span>
                   <span className={clsx(styles.patient_info_bday)}>
-                    {dayjs(findPatient?.birth_date).format("D MMMM YYYY г.")}
+                    {dayjs(findPatient?.birth_date).format("D MMMM YYYY г.")},{" "}
+                    {gender[findPatient?.gender]}
                   </span>
                 </Flex>
+                <span className={clsx(styles.patient_info_gender)}></span>
                 <span className={clsx(styles.patient_info_gender)}>
-                  <b>Пол:</b> {gender[findPatient?.gender]}
+                  <PhoneFilled /> {findPatient?.phone}
                 </span>
                 <span className={clsx(styles.patient_info_gender)}>
-                  <b>Email:</b> {findPatient?.phone}
-                </span>
-                <span className={clsx(styles.patient_info_gender)}>
-                  <b>Телефон:</b> {findPatient?.email}
+                  <MailOutlined /> {findPatient?.email}
                 </span>
               </Flex>
-
-              {/* <span
-                className={clsx(styles.act_btn)}
-                onClick={() => setOpenUpdate(true)}
-              >
-                Редактировать
-              </span> */}
             </Flex>
 
             {dopInfo && (
@@ -269,21 +354,12 @@ export const PatientPage = () => {
             justify="space-between"
             align="center"
           >
-            <span className={clsx(styles.title)}>Активные медикаменты</span>
+            <span className={clsx(styles.title)}>Рецепты</span>
             {/* <span className={clsx(styles.act_btn)}>Изменить</span> */}
           </Flex>
         </section>
 
         <section className={clsx("container")}>
-          <div className={clsx(styles.active_med)}>
-            <Flex
-              className={clsx(styles.active_med_title)}
-              justify="space-between"
-            >
-              <span>Медицинская история</span>
-              {/* <span className={clsx(styles.act_btn)}>Вытащить запись</span> */}
-            </Flex>
-          </div>
           {mappedRecipesWithNames?.length === 0 && (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
@@ -299,11 +375,30 @@ export const PatientPage = () => {
           >
             {mappedRecipesWithNames?.map((item) => (
               <div className={clsx(styles.recipeCard)}>
-                <h3>Рецепт №{item.prescription_codeid}</h3>
+                <Flex>
+                  <h3>Рецепт №{item.prescription_codeid}</h3>
+                </Flex>
+
+                <Flex
+                  justify="space-between"
+                  className={clsx(styles.recipeCardInfo, "my-2")}
+                >
+                  <Flex align="center" className={clsx("gap-[5px]")}>
+                    <FaUserDoctor />
+                    {findUser?.name}
+                  </Flex>
+
+                  <p>
+                    <CalendarOutlined style={{ marginRight: 4 }} />
+
+                    {dayjs.utc(item.created_at).format("DD.MM.YYYY HH:mm")}
+                  </p>
+                </Flex>
+
                 <table className={clsx(styles.recipeTable)}>
                   <thead>
                     <tr>
-                      <th>Лекарство</th>
+                      <th>Медикаменты</th>
                       <th>Доза</th>
                       <th>Прием</th>
                       <th>Курс</th>
@@ -335,9 +430,18 @@ export const PatientPage = () => {
                   gap="8px"
                   className={clsx(styles.recipeActions)}
                 >
-                  <button onClick={() => handlePrint(item)}>Сохранить</button>
-                  <button>SMS</button>
-                  <button>Почта</button>
+                  <Button
+                    icon={<MdSaveAlt />}
+                    onClick={() => handlePrint(item)}
+                    style={{ backgroundColor: "#1890ff", color: "white" }}
+                  ></Button>
+
+                  <Button
+                    style={{ backgroundColor: "#52c41a", color: "white" }}
+                    icon={<MessageOutlined />}
+                  ></Button>
+
+                  <Button type="primary" icon={<MailOutlined />}></Button>
                 </Flex>
               </div>
             ))}
@@ -348,7 +452,7 @@ export const PatientPage = () => {
               className={clsx(styles.create_btn)}
               onClick={() => navigate(`/new-rx/${guid}`)}
             >
-              Создать рецепт
+              Добавить рецепт
             </button>
           </div>
         </section>
