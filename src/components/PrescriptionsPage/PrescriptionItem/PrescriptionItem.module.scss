@@ -1,0 +1,21 @@
+.item {
+  padding: 15px 20px;
+  border-bottom: 2px solid var(--grey-color);
+  cursor: pointer;
+
+  &_info {
+    gap: 5px;
+
+    &_fio {
+      font-weight: 700;
+    }
+
+    &_bday {
+      color: var(--dark-grey-color);
+    }
+  }
+
+  svg {
+    color: var(--dark-grey-color);
+  }
+}

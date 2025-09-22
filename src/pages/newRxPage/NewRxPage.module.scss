@@ -14,10 +14,11 @@
   bottom: 0;
   background-color: var(--grey-color);
   padding: 10px 20px 30px 10px;
+  display: flex;
+  justify-content: center;
 }
 
 .create_btn {
-  width: 100%;
   background-color: var(--green-color);
   border: none;
   padding: 10px;
@@ -27,7 +28,6 @@
 }
 
 .create_btn_dis {
-  width: 100%;
   background-color: var(--dark-grey-color);
   border: none;
   padding: 10px;

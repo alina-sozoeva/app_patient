@@ -14,23 +14,19 @@ export const PatientsPage = () => {
   const [search, setSearch] = useState("");
   const [openAdd, setOpenAdd] = useState(false);
 
-  const { data: patients, isLoading, isFetching } = useGetPatientsQuery();
+  const {
+    data: patients,
+    isLoading,
+    isFetching,
+  } = useGetPatientsQuery(search ? { search } : undefined);
 
   const filterPatients = useMemo(() => {
-    if (!patients) return [];
-
-    const filtered = patients.filter((item) =>
-      item.fio.toLowerCase().includes(search.toLowerCase())
-    );
-
-    const sortedByFio = filtered.sort((a, b) => a.fio.localeCompare(b.fio));
-
-    const last10ByCodeid = sortedByFio
+    const last10ByCodeid = [...(patients || [])]
       .sort((a, b) => b.codeid - a.codeid)
       .slice(0, 10);
 
     return last10ByCodeid;
-  }, [patients, search]);
+  }, [patients]);
 
   const navPatient = (item) => {
     navigate(`/patient/${item.guid}`);

@@ -2,7 +2,6 @@ import {
   CaretDownOutlined,
   LeftOutlined,
   LogoutOutlined,
-  MenuOutlined,
 } from "@ant-design/icons";
 import { Dropdown, Flex, Space } from "antd";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -58,7 +57,6 @@ export const Header = () => {
       <section className={clsx(styles.header_content, "container")}>
         {path === pathname.home && (
           <Flex justify="space-between" align="center">
-            {/* <MenuOutlined style={{ width: "60px" }} /> */}
             <span>LOGO</span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
@@ -148,6 +146,36 @@ export const Header = () => {
               style={{ width: "60px" }}
             />
             <span>Детали</span>
+            <Dropdown menu={{ items }} trigger={["click"]}>
+              <div onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <button className={clsx(styles.btn)}>
+                    {findUser?.name.charAt(0)}
+                  </button>
+                  <Flex vertical gap={4}>
+                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                  </Flex>
+                  <CaretDownOutlined />
+                </Space>
+              </div>
+            </Dropdown>
+          </Flex>
+        )}
+        {(path === pathname.prescriptions ||
+          path === pathname.reports ||
+          path === pathname.notifications ||
+          path === pathname.diagnostics) && (
+          <Flex justify="space-between" align="center">
+            <LeftOutlined
+              onClick={() => navigate("/")}
+              style={{ width: "80px" }}
+            />
+            {path === pathname.prescriptions && <span>Выписанные рецепты</span>}
+            {path === pathname.reports && <span>Отчеты</span>}
+            {path === pathname.notifications && <span>Уведомления</span>}
+            {path === pathname.diagnostics && <span>Диагностика</span>}
+
+            <span></span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
                 <Space>

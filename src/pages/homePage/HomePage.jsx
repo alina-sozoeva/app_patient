@@ -1,43 +1,44 @@
 import { Flex } from "antd";
 import { useNavigate } from "react-router-dom";
 
+import { pathname } from "../../enums";
 import rx from "../../assets/rx.png";
 
 import styles from "./HomePage.module.scss";
 import clsx from "clsx";
-import { pathname } from "../../enums";
 
 import {
   HiOutlineDocumentText,
   HiOutlineClipboardDocumentList,
   HiOutlineBell,
-  HiOutlineBeaker,
 } from "react-icons/hi2";
+
+import { MedicineBoxOutlined } from "@ant-design/icons";
 
 const acts = [
   {
     key: 1,
     icon: <HiOutlineDocumentText />,
     title: "Выписанные рецепты",
-    path: "/written",
+    path: pathname.prescriptions,
   },
   {
     key: 2,
     icon: <HiOutlineClipboardDocumentList />,
     title: "Отчеты",
-    path: "/reports",
+    path: pathname.reports,
   },
   {
     key: 3,
-    icon: <HiOutlineBell />,
-    title: "Уведомления",
-    path: "/notifications",
+    icon: <MedicineBoxOutlined />,
+    title: "Диагностика",
+    path: pathname.diagnostics,
   },
   {
     key: 4,
-    icon: <HiOutlineBeaker />,
-    title: "ПДМП",
-    path: "/other",
+    icon: <HiOutlineBell />,
+    title: "Уведомления",
+    path: pathname.notifications,
   },
 ];
 

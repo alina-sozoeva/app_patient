@@ -68,6 +68,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: pathname.prescriptions,
+        element: (
+          <PrivateRoute>
+            <Pages.PrescriptionsPage />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: pathname.other,
         element: (
           <PrivateRoute>

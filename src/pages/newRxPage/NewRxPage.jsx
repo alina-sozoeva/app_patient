@@ -1,4 +1,4 @@
-import { Empty, Flex, Input } from "antd";
+import { Empty, Flex, Input, Spin } from "antd";
 
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -20,7 +20,11 @@ export const NewRxPage = () => {
     () => JSON.parse(localStorage.getItem("selectedDrugs")) || []
   );
 
-  const { data: drugs } = useGetDrugQuery({ search });
+  const {
+    data: drugs,
+    isLoading,
+    isFetching,
+  } = useGetDrugQuery(search ? { search } : undefined);
 
   const sortedDrugs = [...(drugs || [])].sort((a, b) =>
     a.nameid.localeCompare(b.nameid)
@@ -40,78 +44,69 @@ export const NewRxPage = () => {
     localStorage.setItem("selectedDrugs", JSON.stringify(updated));
   };
 
-  const displayedDrugs =
-    search.length >= 3 ? sortedDrugs : sortedDrugs.slice(0, 10);
+  const displayedDrugs = search ? sortedDrugs : sortedDrugs.slice(0, 10);
 
   return (
-    <main>
-      <section className={clsx(styles.main, "container")}>
-        <Flex
-          className={clsx(styles.patient_header)}
-          justify="space-between"
-          align="center"
-        >
-          <Input
-            prefix={<SearchOutlined />}
-            placeholder="Найти новое лекарство"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </Flex>
-
-        <Flex className={clsx(styles.favorite_header)} justify="space-between">
-          <span>Медикаменты</span>
-          <DownOutlined
-            rotate={rxsOpen && 180}
-            onClick={() => setRxsOpen(!rxsOpen)}
-          />
-        </Flex>
-
-        {search.length > 0 && search.length < 3 && (
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "8px",
-              fontSize: "14px",
-              color: "#999",
-            }}
+    <Spin spinning={isLoading || isFetching}>
+      <main>
+        <section className={clsx(styles.main, "container")}>
+          <Flex
+            className={clsx(styles.patient_header)}
+            justify="space-between"
+            align="center"
           >
-            Введите хотя бы 3 символа для начала поиска
-          </div>
-        )}
-
-        {displayedDrugs?.length === 0 && search.length > 3 && (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        )}
-
-        {(rxsOpen || search !== "") && (
-          <Flex vertical style={{ maxHeight: "400px", overflowY: "auto" }}>
-            {displayedDrugs?.map((item) => (
-              <SearchItem
-                item={item}
-                selectedDrugs={selectedDrugs}
-                toggleDrug={toggleDrug}
-              />
-            ))}
+            <Input
+              prefix={<SearchOutlined />}
+              placeholder="Найти новое лекарство"
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </Flex>
-        )}
-        <div className={clsx("container", styles.create_btn_wrap)}>
-          <button
-            disabled={selectedDrugs.length === 0}
-            className={clsx(
-              selectedDrugs.length === 0
-                ? styles.create_btn_dis
-                : styles.create_btn
-            )}
-            onClick={() => navigate(`/rx-details/${guid}`)}
+
+          <Flex
+            className={clsx(styles.favorite_header)}
+            justify="space-between"
           >
-            {selectedDrugs.length === 0 ? (
-              <span>Выберите медикамент</span>
-            ) : (
-              "Продолжить"
-            )}
-          </button>
-        </div>
-      </section>
-    </main>
+            <span>Медикаменты</span>
+            <DownOutlined
+              rotate={rxsOpen && 180}
+              onClick={() => setRxsOpen(!rxsOpen)}
+            />
+          </Flex>
+
+          {displayedDrugs?.length === 0 && (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          )}
+
+          {(rxsOpen || search !== "") && (
+            <Flex vertical style={{ maxHeight: "400px", overflowY: "auto" }}>
+              {displayedDrugs?.map((item) => (
+                <SearchItem
+                  item={item}
+                  selectedDrugs={selectedDrugs}
+                  toggleDrug={toggleDrug}
+                />
+              ))}
+            </Flex>
+          )}
+          <div className={clsx("container", styles.create_btn_wrap)}>
+            <button
+              disabled={selectedDrugs.length === 0}
+              className={clsx(
+                selectedDrugs.length === 0
+                  ? styles.create_btn_dis
+                  : styles.create_btn
+              )}
+              onClick={() => navigate(`/rx-details/${guid}`)}
+            >
+              {selectedDrugs.length === 0 ? (
+                <span>Выберите медикамент</span>
+              ) : (
+                "Продолжить"
+              )}
+            </button>
+          </div>
+        </section>
+      </main>
+    </Spin>
   );
 };

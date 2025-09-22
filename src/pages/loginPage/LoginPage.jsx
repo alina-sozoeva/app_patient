@@ -68,10 +68,17 @@ export const LoginPage = () => {
           <Input.Password placeholder="Введите пароль" />
         </Form.Item>
         <Form.Item>
-          <Flex>
+          <Flex align="center" justify="center">
             <button className={clsx(styles.btn)}>Войти</button>
           </Flex>
         </Form.Item>
+
+        <Flex vertical className={clsx(styles.info)}>
+          <span>Цифровые решения компании "Бехруз Софт"</span>
+          <span>Номер телефона:</span>
+          <span>WhatsApp:</span>
+          <span>Почта:</span>
+        </Flex>
       </Form>
     </section>
   );

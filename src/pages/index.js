@@ -5,3 +5,4 @@ export * from "./patientPage";
 export * from "./newRxPage";
 export * from "./rxDetailsPage";
 export * from "./WIPPage";
+export * from "./prescriptionsPage";

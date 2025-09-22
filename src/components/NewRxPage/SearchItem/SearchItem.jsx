@@ -9,7 +9,13 @@ export const SearchItem = ({ item, selectedDrugs, toggleDrug }) => {
   const { data: methodUse } = useGetMethodUseQuery();
 
   return (
-    <Flex vertical>
+    <Flex
+      vertical
+      className={clsx(
+        selectedDrugs.some((d) => d.codeid === item.codeid) && styles.item_check
+      )}
+      onClick={() => toggleDrug(item)}
+    >
       <Flex
         className={clsx(styles.search)}
         align="center"
@@ -21,13 +27,6 @@ export const SearchItem = ({ item, selectedDrugs, toggleDrug }) => {
           </span>
           <span>({item?.form_name})</span>
           <span>{methodUse?.[0]?.nameid}</span>
-        </Flex>
-
-        <Flex gap="small" className={clsx(styles.btn)}>
-          <Checkbox
-            checked={selectedDrugs.some((d) => d.codeid === item.codeid)}
-            onChange={() => toggleDrug(item)}
-          />
         </Flex>
       </Flex>
     </Flex>

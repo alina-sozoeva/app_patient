@@ -11,4 +11,8 @@ export const pathname = {
   newRx: "/new-rx/:guid",
   login: "/login",
   rxDetails: "/rx-details/:guid",
+  prescriptions: "/prescriptions-written",
+  reports: "/reports",
+  diagnostics: "/diagnostics",
+  notifications: "/notifications",
 };

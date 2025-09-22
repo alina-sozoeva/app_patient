@@ -18,8 +18,8 @@ export const PatientItem = ({ item, onClick }) => {
       onClick={onClick}
     >
       <Flex className={clsx(styles.item_info)}>
-        <span className={clsx(styles.item_info_fio)}>{item.fio}</span>
-        <span className={clsx(styles.item_info_bday)}></span>
+        <span className={clsx(styles.item_info_fio)}>{item?.fio}</span>
+        <span className={clsx(styles.item_info_bday)}>{item?.phone}</span>
       </Flex>
       <RightOutlined />
     </Flex>

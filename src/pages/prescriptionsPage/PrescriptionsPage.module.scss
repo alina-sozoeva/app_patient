@@ -1,0 +1,32 @@
+.prescrip {
+  &_add {
+    background-color: var(--grey-color);
+    padding: 10px;
+
+    span {
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+  }
+}
+
+.prescrip_btn {
+  background-color: var(--green-color);
+  border: none;
+  padding: 5px 10px;
+  color: var(--white-color);
+  border-radius: 10px;
+}
+.prescrip_btn_active {
+  background-color: rgb(255, 169, 64);
+  border: none;
+  padding: 5px 10px;
+  color: var(--white-color);
+  border-radius: 10px;
+}
+
+.prescrip_add {
+  input {
+    font-weight: 200;
+  }
+}
