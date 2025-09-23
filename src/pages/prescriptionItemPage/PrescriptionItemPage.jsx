@@ -32,7 +32,7 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { printPrescription } from "../../utils";
 import { useMappedRecipes } from "../../hooks";
 
-import styles from "./PatientPage.module.scss";
+import styles from "./PrescriptionItemPage.module.scss";
 import clsx from "clsx";
 
 import utc from "dayjs/plugin/utc";
@@ -42,8 +42,8 @@ import "dayjs/locale/ru";
 dayjs.locale("ru");
 dayjs.extend(utc);
 
-export const PatientPage = () => {
-  const { guid } = useParams();
+export const PrescriptionItemPage = () => {
+  const { guid, codeid } = useParams();
   const navigate = useNavigate();
 
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -89,6 +89,10 @@ export const PatientPage = () => {
     courses,
     frequency,
   });
+
+  const test = mappedRecipesWithNames.find(
+    (item) => item?.prescription_codeid === codeid
+  );
 
   const handlePrint = async (prescription) => {
     printPrescription({ prescription, findPatient, findUser });
@@ -143,7 +147,7 @@ export const PatientPage = () => {
             justify="space-between"
             align="center"
           >
-            <span className={clsx(styles.title)}>Профиль</span>
+            <span className={clsx(styles.title)}>Данные пациента</span>
             <button className={clsx(styles.tel)}>
               <a href={`tel:${findPatient?.phone}`}>
                 Позвонить <PhoneFilled />
@@ -171,28 +175,12 @@ export const PatientPage = () => {
                   <MailOutlined /> {findPatient?.email}
                 </span>
               </Flex>
-              <button
-                className={clsx(styles.create_btn)}
-                onClick={() => navigate(`/new-rx/${guid}`)}
-              >
-                + Новый рецепт
-              </button>
             </Flex>
-          </Flex>
-
-          <Flex
-            className={clsx(styles.patient_header, "container")}
-            justify="space-between"
-            align="center"
-          >
-            <span className={clsx(styles.title)}>Выписанные рецепты</span>
           </Flex>
         </section>
 
         <section className={clsx("container")}>
-          {mappedRecipesWithNames?.length === 0 && (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          )}
+          {/* {test?.length === 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />} */}
 
           <Flex
             className={clsx("mt-2")}
@@ -203,107 +191,107 @@ export const PatientPage = () => {
               gap: "16px",
             }}
           >
-            {mappedRecipesWithNames?.map((item) => (
-              <div className={clsx(styles.recipeCard)}>
-                <Flex>
-                  <h3>
-                    Рецепт{" "}
-                    <b style={{ color: "var(--primary-color)" }}>
-                      №{item.prescription_codeid}
-                    </b>
-                  </h3>
+            {/* {test?.map((item) => ( */}
+            <div className={clsx(styles.recipeCard)}>
+              <Flex>
+                <h3>
+                  Рецепт{" "}
+                  <b style={{ color: "var(--primary-color)" }}>
+                    №{test?.prescription_codeid}
+                  </b>
+                </h3>
+              </Flex>
+
+              <Flex
+                justify="space-between"
+                className={clsx(styles.recipeCardInfo, "my-2")}
+              >
+                <Flex align="center" className={clsx("gap-[5px]")}>
+                  <FaUserDoctor />
+                  {findUser?.name}
                 </Flex>
 
-                <Flex
-                  justify="space-between"
-                  className={clsx(styles.recipeCardInfo, "my-2")}
-                >
-                  <Flex align="center" className={clsx("gap-[5px]")}>
-                    <FaUserDoctor />
-                    {findUser?.name}
-                  </Flex>
+                <p>
+                  <CalendarOutlined style={{ marginRight: 4 }} />
 
-                  <p>
-                    <CalendarOutlined style={{ marginRight: 4 }} />
+                  {dayjs.utc(test?.created_at).format("DD.MM.YYYY HH:mm")}
+                </p>
+              </Flex>
 
-                    {dayjs.utc(item.created_at).format("DD.MM.YYYY HH:mm")}
-                  </p>
-                </Flex>
-
-                <table className={clsx(styles.recipeTable)}>
-                  <thead>
-                    <tr>
-                      <th>Медикаменты</th>
-                      <th>Доза</th>
-                      <th>Прием</th>
-                      <th>Курс</th>
+              <table className={clsx(styles.recipeTable)}>
+                <thead>
+                  <tr>
+                    <th>Медикаменты</th>
+                    <th>Доза</th>
+                    <th>Прием</th>
+                    <th>Курс</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {test?.items.map((med) => (
+                    <tr key={med.codeid}>
+                      <td>
+                        <Flex vertical>
+                          <span>{med.drugName}</span>
+                          <span>({med.form_name})</span>
+                        </Flex>
+                      </td>
+                      <td>{med.doseName}</td>
+                      <td>
+                        {med.time_before_food && "до еды "}
+                        {med.time_during_food && "во время еды "}
+                        {med.time_after_food && "после еды "}
+                      </td>
+                      <td>{med.courseName} д.</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {item.items.map((med) => (
-                      <tr key={med.codeid}>
-                        <td>
-                          <Flex vertical>
-                            <span>{med.drugName}</span>
-                            <span>({med.form_name})</span>
-                          </Flex>
-                        </td>
-                        <td>{med.doseName}</td>
-                        <td>
-                          {med.time_before_food && "до еды "}
-                          {med.time_during_food && "во время еды "}
-                          {med.time_after_food && "после еды "}
-                        </td>
-                        <td>{med.courseName} д.</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                  ))}
+                </tbody>
+              </table>
 
-                <Flex
-                  justify="end"
-                  gap="8px"
-                  className={clsx(styles.recipeActions)}
+              <Flex
+                justify="end"
+                gap="8px"
+                className={clsx(styles.recipeActions)}
+              >
+                {test?.status === 1 && (
+                  <Button
+                    icon={<RedoOutlined />}
+                    onClick={() => handleRepeatPrescription(test)}
+                    style={{ backgroundColor: "#ffa940", color: "white" }}
+                  >
+                    Повторить
+                  </Button>
+                )}
+
+                <Button
+                  icon={<MdSaveAlt />}
+                  onClick={() => handlePrint(test)}
+                  style={{ backgroundColor: "#1890ff", color: "white" }}
                 >
-                  {item?.status === 1 && (
-                    <Button
-                      icon={<RedoOutlined />}
-                      onClick={() => handleRepeatPrescription(item)}
-                      style={{ backgroundColor: "#ffa940", color: "white" }}
-                    >
-                      Повторить
-                    </Button>
-                  )}
+                  Сохранить
+                </Button>
 
-                  <Button
-                    icon={<MdSaveAlt />}
-                    onClick={() => handlePrint(item)}
-                    style={{ backgroundColor: "#1890ff", color: "white" }}
-                  >
-                    Сохранить
-                  </Button>
+                <Button
+                  style={{ backgroundColor: "#52c41a", color: "white" }}
+                  icon={<MessageOutlined />}
+                >
+                  SMS
+                </Button>
 
-                  <Button
-                    style={{ backgroundColor: "#52c41a", color: "white" }}
-                    icon={<MessageOutlined />}
-                  >
-                    SMS
-                  </Button>
-
-                  <Button
-                    type="primary"
-                    icon={<MailOutlined />}
-                    style={{
-                      backgroundColor: "#C8A2C8",
-                      borderColor: "#C8A2C8",
-                      color: "white",
-                    }}
-                  >
-                    Почта
-                  </Button>
-                </Flex>
-              </div>
-            ))}
+                <Button
+                  type="primary"
+                  icon={<MailOutlined />}
+                  style={{
+                    backgroundColor: "#C8A2C8",
+                    borderColor: "#C8A2C8",
+                    color: "white",
+                  }}
+                >
+                  Почта
+                </Button>
+              </Flex>
+            </div>
+            {/* ))} */}
           </Flex>
 
           <div className={clsx("container", styles.create_btn_wrap)}>

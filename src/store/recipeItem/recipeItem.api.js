@@ -13,10 +13,10 @@ export const recipeItemApi = createApi({
       providesTags: ["RecipeItemList"],
     }),
     getRecipe: builder.query({
-      query: (patientId) => ({
+      query: (filter) => ({
         url: "/recipe",
         method: "GET",
-        params: patientId,
+        params: filter,
       }),
       providesTags: ["RecipeList"],
     }),

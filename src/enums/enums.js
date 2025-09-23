@@ -15,4 +15,5 @@ export const pathname = {
   reports: "/reports",
   diagnostics: "/diagnostics",
   notifications: "/notifications",
+  prescriptionsId: "/prescriptions-written/:codeid/:guid",
 };

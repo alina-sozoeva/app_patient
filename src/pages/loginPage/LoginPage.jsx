@@ -53,7 +53,7 @@ export const LoginPage = () => {
             },
           ]}
         >
-          <Input placeholder="Введите логин" />
+          <Input placeholder="Введите логин" style={{ width: "250px" }} />
         </Form.Item>
         <Form.Item
           name="password"
@@ -65,19 +65,22 @@ export const LoginPage = () => {
             },
           ]}
         >
-          <Input.Password placeholder="Введите пароль" />
+          <Input.Password
+            placeholder="Введите пароль"
+            style={{ width: "250px" }}
+          />
         </Form.Item>
         <Form.Item>
-          <Flex align="center" justify="center">
+          <Flex align="center" justify="center" className={clsx("w-full")}>
             <button className={clsx(styles.btn)}>Войти</button>
           </Flex>
         </Form.Item>
 
         <Flex vertical className={clsx(styles.info)}>
-          <span>Цифровые решения компании "Бехруз Софт"</span>
-          <span>Номер телефона:</span>
-          <span>WhatsApp:</span>
-          <span>Почта:</span>
+          <span>Цифровые решения "Бехруз Софт"</span>
+          <span>Номер телефона: +996(555)-954-120</span>
+          <span>WhatsApp: +996(555)-954-120</span>
+          <span>Почта: admin@333.kg</span>
         </Flex>
       </Form>
     </section>

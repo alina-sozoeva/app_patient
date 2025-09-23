@@ -6,3 +6,4 @@ export * from "./newRxPage";
 export * from "./rxDetailsPage";
 export * from "./WIPPage";
 export * from "./prescriptionsPage";
+export * from "./prescriptionItemPage";

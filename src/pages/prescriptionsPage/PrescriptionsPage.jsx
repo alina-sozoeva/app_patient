@@ -2,44 +2,47 @@ import { Flex, Spin } from "antd";
 
 import { useState } from "react";
 import { PrescriptionItem } from "../../components";
-import { useGetRecipeQuery } from "../../store";
+import { useGetMappedRecipesQuery, useGetRecipeQuery } from "../../store";
 
 import clsx from "clsx";
 import styles from "./PrescriptionsPage.module.scss";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { useNavigate } from "react-router-dom";
 dayjs.extend(utc);
 
 const btns = [
-  { title: "За сегодня", filterFn: (d) => dayjs(d).isSame(dayjs(), "day") },
+  { title: "За сегодня", label: "today" },
   {
     title: "За вчера",
-    filterFn: (d) => dayjs(d).isSame(dayjs().subtract(1, "day"), "day"),
+    label: "yesterday",
   },
   {
     title: "За 3 дня",
-    filterFn: (d) => dayjs(d).isAfter(dayjs().subtract(3, "day")),
+    label: "3days",
   },
   {
     title: "За неделю",
-    filterFn: (d) => dayjs(d).isAfter(dayjs().subtract(7, "day")),
+    label: "week",
   },
   {
     title: "За месяц",
-    filterFn: (d) => dayjs(d).isAfter(dayjs().subtract(1, "month")),
+    label: "month",
   },
 ];
 
 export const PrescriptionsPage = () => {
-  const { data: recipe, isLoading, isFetching } = useGetRecipeQuery();
+  const navigate = useNavigate();
+  const [selectedFilter, setSelectedFilter] = useState("today");
 
-  const [selectedFilter, setSelectedFilter] = useState(btns[0]);
-
-  const filteredRecipes = recipe?.filter((r) =>
-    selectedFilter?.filterFn(r.created_at)
+  const { data, isLoading, isFetching } = useGetMappedRecipesQuery(
+    selectedFilter ? { filter: selectedFilter } : undefined
   );
-  console.log(selectedFilter, "selectedFilter");
+
+  const nav = (codeid, guid) => {
+    navigate(`/prescriptions-written/${codeid}/${guid}`);
+  };
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -54,13 +57,13 @@ export const PrescriptionsPage = () => {
             <Flex justify="space-between">
               {btns.map((item) => (
                 <button
-                  onClick={() => setSelectedFilter(item)}
+                  onClick={() => setSelectedFilter(item.label)}
                   style={{
                     whiteSpace: "nowrap",
                     display: "inline-block",
                   }}
                   className={clsx(
-                    item === selectedFilter
+                    item.label === selectedFilter
                       ? styles.prescrip_btn_active
                       : styles.prescrip_btn
                   )}
@@ -72,8 +75,8 @@ export const PrescriptionsPage = () => {
           </Flex>
 
           <Flex vertical style={{ maxHeight: "600px", overflowY: "auto" }}>
-            {filteredRecipes?.map((item) => (
-              <PrescriptionItem item={item} />
+            {data?.map((item) => (
+              <PrescriptionItem item={item} onClick={nav} />
             ))}
           </Flex>
         </section>

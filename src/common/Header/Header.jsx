@@ -3,7 +3,7 @@ import {
   LeftOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { Dropdown, Flex, Space } from "antd";
+import { Dropdown, Flex, Select, Space } from "antd";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { pathname } from "../../enums";
@@ -15,7 +15,7 @@ import styles from "./Header.module.scss";
 import clsx from "clsx";
 
 export const Header = () => {
-  const { guid } = useParams();
+  const { guid, codeid } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,10 +40,27 @@ export const Header = () => {
     {
       label: (
         <Space onClick={logOut}>
-          Выйти <LogoutOutlined rotate={270} />
+          <LogoutOutlined rotate={270} /> Выйти
         </Space>
       ),
       key: "3",
+    },
+  ];
+
+  const lang = [
+    {
+      label: <p>🇷🇺 ru</p>,
+      key: "ru",
+      emoji: "🇷🇺",
+    },
+
+    {
+      type: "divider",
+    },
+    {
+      label: <p>🇹🇯 tg</p>,
+      key: "tg",
+      emoji: "🇹🇯",
     },
   ];
 
@@ -58,6 +75,16 @@ export const Header = () => {
         {path === pathname.home && (
           <Flex justify="space-between" align="center">
             <span>LOGO</span>
+            {/* <Dropdown menu={{ items: lang }} trigger={["click"]}>
+              <div onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <Flex vertical gap={4}>
+                    <p className={clsx(styles.user_info)}>{lang[0].label}</p>
+                  </Flex>
+                  <CaretDownOutlined />
+                </Space>
+              </div>
+            </Dropdown> */}
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
@@ -75,10 +102,13 @@ export const Header = () => {
         )}
         {path === pathname.patients && (
           <Flex justify="space-between" align="center">
-            <LeftOutlined
+            <div
+              className={clsx(styles.prev_arr)}
               onClick={() => navigate("/")}
-              style={{ width: "60px" }}
-            />
+            >
+              <LeftOutlined style={{ width: "60px" }} />
+            </div>
+
             <span>10 последних пациентов</span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
@@ -97,10 +127,12 @@ export const Header = () => {
         )}
         {path.startsWith("/patient/") && (
           <Flex justify="space-between" align="center">
-            <LeftOutlined
+            <div
+              className={clsx(styles.prev_arr)}
               onClick={() => navigate(pathname.patients)}
-              style={{ width: "60px" }}
-            />
+            >
+              <LeftOutlined style={{ width: "60px" }} />{" "}
+            </div>
             <span>ПАЦИЕНТ</span>{" "}
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
@@ -119,10 +151,12 @@ export const Header = () => {
         )}
         {path.startsWith("/new-rx/") && (
           <Flex justify="space-between">
-            <LeftOutlined
+            <div
+              className={clsx(styles.prev_arr)}
               onClick={() => returnNewRx()}
-              style={{ width: "60px" }}
-            />
+            >
+              <LeftOutlined style={{ width: "60px" }} />
+            </div>
             <span>Создать новый рецепт</span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
@@ -141,10 +175,12 @@ export const Header = () => {
         )}
         {path.startsWith("/rx-details/") && (
           <Flex justify="space-between" align="center">
-            <LeftOutlined
+            <div
+              className={clsx(styles.prev_arr)}
               onClick={() => navigate(`/new-rx/${guid}`)}
-              style={{ width: "60px" }}
-            />
+            >
+              <LeftOutlined style={{ width: "60px" }} />{" "}
+            </div>
             <span>Детали</span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
@@ -166,16 +202,42 @@ export const Header = () => {
           path === pathname.notifications ||
           path === pathname.diagnostics) && (
           <Flex justify="space-between" align="center">
-            <LeftOutlined
+            <div
+              className={clsx(styles.prev_arr)}
               onClick={() => navigate("/")}
-              style={{ width: "80px" }}
-            />
+            >
+              <LeftOutlined style={{ width: "80px" }} />{" "}
+            </div>
             {path === pathname.prescriptions && <span>Выписанные рецепты</span>}
             {path === pathname.reports && <span>Отчеты</span>}
             {path === pathname.notifications && <span>Уведомления</span>}
             {path === pathname.diagnostics && <span>Диагностика</span>}
 
             <span></span>
+            <Dropdown menu={{ items }} trigger={["click"]}>
+              <div onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <button className={clsx(styles.btn)}>
+                    {findUser?.name.charAt(0)}
+                  </button>
+                  <Flex vertical gap={4}>
+                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                  </Flex>
+                  <CaretDownOutlined />
+                </Space>
+              </div>
+            </Dropdown>
+          </Flex>
+        )}
+        {path.startsWith("/prescriptions-written/") && (
+          <Flex justify="space-between" align="center">
+            <div
+              className={clsx(styles.prev_arr)}
+              onClick={() => navigate(`/prescriptions-written`)}
+            >
+              <LeftOutlined style={{ width: "60px" }} />{" "}
+            </div>
+            <span>Детали рецепта</span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
                 <Space>

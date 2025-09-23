@@ -10,11 +10,12 @@
   cursor: pointer;
 
   img {
-    width: 35%;
+    width: 38%;
   }
 
   span {
     font-size: 200;
+    font-size: 14px;
   }
 }
 
@@ -40,10 +41,11 @@
   }
 
   svg {
-    font-size: 40px;
+    font-size: 54px;
   }
 
   span {
     color: var(--primary-color);
+    font-size: 14px;
   }
 }

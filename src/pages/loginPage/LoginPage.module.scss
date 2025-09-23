@@ -9,12 +9,16 @@
 
 .form {
   background: #ffffff;
-  padding: 40px 30px;
+  padding: 40px;
   border-radius: 14px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 400px;
+  max-width: 350px;
   border: 1px solid #cde7f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   :global {
     .ant-form-item {
@@ -53,6 +57,7 @@
   color: #ffffff;
   border-radius: 5px;
   font-size: 14px;
+  width: 250px;
 }
 
 .info {
