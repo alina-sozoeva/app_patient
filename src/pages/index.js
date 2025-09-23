@@ -7,3 +7,4 @@ export * from "./rxDetailsPage";
 export * from "./WIPPage";
 export * from "./prescriptionsPage";
 export * from "./prescriptionItemPage";
+export * from "./reportsPage";

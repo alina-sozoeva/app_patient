@@ -253,7 +253,7 @@ export const PrescriptionItemPage = () => {
                 gap="8px"
                 className={clsx(styles.recipeActions)}
               >
-                {test?.status === 1 && (
+                {/* {test?.status === 1 && (
                   <Button
                     icon={<RedoOutlined />}
                     onClick={() => handleRepeatPrescription(test)}
@@ -261,7 +261,7 @@ export const PrescriptionItemPage = () => {
                   >
                     Повторить
                   </Button>
-                )}
+                )} */}
 
                 <Button
                   icon={<MdSaveAlt />}

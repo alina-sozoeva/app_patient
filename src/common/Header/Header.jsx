@@ -209,7 +209,7 @@ export const Header = () => {
               <LeftOutlined style={{ width: "80px" }} />{" "}
             </div>
             {path === pathname.prescriptions && <span>Выписанные рецепты</span>}
-            {path === pathname.reports && <span>Отчеты</span>}
+            {path === pathname.reports && <span>Отчет за послений месяц</span>}
             {path === pathname.notifications && <span>Уведомления</span>}
             {path === pathname.diagnostics && <span>Диагностика</span>}
 

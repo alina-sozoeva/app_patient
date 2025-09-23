@@ -20,6 +20,20 @@ export const prescriptionApi = createApi({
       }),
       providesTags: ["PrescriptionList"],
     }),
+    getMonthlyPrescriptionReport: builder.query({
+      query: () => ({
+        url: "/monthly-prescription-report",
+        method: "GET",
+      }),
+      providesTags: ["PrescriptionList"],
+    }),
+    getMonthlyDrugReport: builder.query({
+      query: () => ({
+        url: "/monthly-grug-report",
+        method: "GET",
+      }),
+      providesTags: ["PrescriptionList"],
+    }),
     addPatientPrescription: builder.mutation({
       query: (newPrescription) => ({
         url: "/patientWithPrescription",
@@ -35,4 +49,6 @@ export const {
   useGetPrescriptionQuery,
   useAddPatientPrescriptionMutation,
   useGetMappedRecipesQuery,
+  useGetMonthlyPrescriptionReportQuery,
+  useGetMonthlyDrugReportQuery,
 } = prescriptionApi;

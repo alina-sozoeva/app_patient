@@ -84,6 +84,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: pathname.reports,
+        element: (
+          <PrivateRoute>
+            <Pages.ReportsPage />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: pathname.other,
         element: (
           <PrivateRoute>

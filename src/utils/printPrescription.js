@@ -28,28 +28,47 @@ export const printPrescription = async ({
   let html = `
 <html>
   <head>
-    <title>Рецепт</title>
+    <title>Выписанный рецепт</title>
     <style>
       body { 
         font-family: 'Times New Roman', Georgia, serif; 
         padding: 30px; 
         color: #000;
       }
-      h1, h2 { 
-        text-align: center; 
-        margin: 0;
-      }
-      h2 { 
+      h1 { 
+        font-size: 24px; 
+        font-weight: bold;
+        text-align: left;
         margin-bottom: 20px;
-        font-size: 18px;
-        font-weight: normal;
+      }
+      .top-line {
+        display: flex; 
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+      .top-line .qr {
+        text-align: center;
+        font-size: 10px;
+        width: 120px;
+      }
+      .top-line .qr img {
+        width: 120px; 
+        height: 120px;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .top-line .right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        font-size: 14px;
+        font-weight: bold;
       }
       .header {
         display: flex; 
         justify-content: space-between; 
         margin-bottom: 30px;
-      }
-      .header div {
         font-size: 14px;
       }
       table { 
@@ -66,14 +85,6 @@ export const printPrescription = async ({
       th { 
         background-color: #f0f0f0; 
       }
-      .qr {
-        text-align: center; 
-        margin-top: 20px;
-      }
-      .qr img {
-        width: 120px; 
-        height: 120px;
-      }
       .footer {
         font-size: 12px;
         text-align: center;
@@ -83,29 +94,35 @@ export const printPrescription = async ({
     </style>
   </head>
   <body>
-  <h1 style="font-size: 24px; font-weight: bold; text-align: left; margin-bottom: 20px;">LOGO</h1>
 
-    <h1>РЕЦЕПТ</h1>
+    <div class="top-line">
+      <div class="qr">
+        <img src="${qrUrl}" />
+        <div>Отсканируйте QR-код для получения рецепта</div>
+      </div>
+      <div class="right">
+        <div>LOGO</div>
+        <div>Лицензия</div>
+      </div>
+    </div>
+
+    <h1>Выписанный рецепт</h1>
 
     <div class="header">
       <div>
-        <p><strong>Пациент:</strong> ${findPatient?.fio}</p>
-        <p><strong>Дата рождения:</strong> ${dayjs(
-          findPatient?.birth_date
-        ).format("DD.MM.YYYY")}</p>
+        ${findPatient?.fio || "-"}<br/>
+        ${dayjs(findPatient?.birth_date).format("DD.MM.YYYY")}
       </div>
       <div>
-        <p><strong>Врач:</strong> ${findUser?.name || "-"}</p>
-        <p><strong>Дата создания:</strong> ${dayjs
-          .utc(prescription.created_at)
-          .format("DD.MM.YYYY HH:mm")}</p>
+        ${findUser?.name || "-"}<br/>
+        ${dayjs.utc(prescription.created_at).format("DD.MM.YYYY HH:mm")}
       </div>
     </div>
 
     <table>
       <thead>
         <tr>
-          <th>Лекарство</th>
+          <th>Медикаменты</th>
           <th>Форма</th>
           <th>Приём</th>
           <th>Курс (дни)</th>
@@ -130,15 +147,6 @@ export const printPrescription = async ({
           .join("")}
       </tbody>
     </table>
-
-    <div class="qr">
-      <img src="${qrUrl}" />
-      <p>Отсканируйте QR-код для получения рецепта</p>
-    </div>
-
-    <div class="footer">
-      Документ сформирован автоматически
-    </div>
   </body>
 </html>
 `;
