@@ -8,3 +8,5 @@ export * from "./WIPPage";
 export * from "./prescriptionsPage";
 export * from "./prescriptionItemPage";
 export * from "./reportsPage";
+export * from "./diagnosticsPage";
+export * from "./referralPage";

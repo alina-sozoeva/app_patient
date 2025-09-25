@@ -92,6 +92,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: pathname.diagnostics,
+        element: (
+          <PrivateRoute>
+            <Pages.WIPPage />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: pathname.other,
         element: (
           <PrivateRoute>

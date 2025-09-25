@@ -96,7 +96,9 @@ export const ReportsPage = () => {
                     <th style={{ textAlign: "center" }}>
                       {selectedFilter === "recipe" ? "Выдано" : "Выдано"}
                     </th>
-                    <th style={{ textAlign: "center" }}>Получили</th>
+                    {selectedFilter === "recipe" && (
+                      <th style={{ textAlign: "center" }}>Получили</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -109,7 +111,11 @@ export const ReportsPage = () => {
                           ? item?.total_prescriptions
                           : item?.total_drugs}
                       </td>
-                      <td style={{ textAlign: "center" }}>{item?.picked_up}</td>
+                      {selectedFilter === "recipe" && (
+                        <td style={{ textAlign: "center" }}>
+                          {item?.picked_up}
+                        </td>
+                      )}
                     </tr>
                   ))}
 
@@ -118,7 +124,10 @@ export const ReportsPage = () => {
                     <td>Итого</td>
                     {selectedFilter === "drug" && <td></td>}
                     <td style={{ textAlign: "center" }}>{totalIssued}</td>
-                    <td style={{ textAlign: "center" }}>{totalPicked}</td>
+
+                    {selectedFilter === "recipe" && (
+                      <td style={{ textAlign: "center" }}>{totalPicked}</td>
+                    )}
                   </tr>
                 </tbody>
               </table>

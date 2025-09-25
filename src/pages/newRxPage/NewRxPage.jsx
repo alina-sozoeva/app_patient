@@ -101,7 +101,7 @@ export const NewRxPage = () => {
               {selectedDrugs.length === 0 ? (
                 <span>Выберите медикамент</span>
               ) : (
-                "Продолжить"
+                "Далее"
               )}
             </button>
           </div>
