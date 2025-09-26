@@ -95,7 +95,31 @@ export const router = createBrowserRouter([
         path: pathname.diagnostics,
         element: (
           <PrivateRoute>
-            <Pages.WIPPage />
+            <Pages.DiagnosticsPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: pathname.diagnosticId,
+        element: (
+          <PrivateRoute>
+            <Pages.DiagnosticsItemPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: pathname.newReferral,
+        element: (
+          <PrivateRoute>
+            <Pages.NewReferralPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: pathname.referralDetails,
+        element: (
+          <PrivateRoute>
+            <Pages.ReferralDetailsPage />
           </PrivateRoute>
         ),
       },

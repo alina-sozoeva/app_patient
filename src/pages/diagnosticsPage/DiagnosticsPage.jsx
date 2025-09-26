@@ -7,7 +7,7 @@ import { AddPatientModal, PatientItem } from "../../components";
 import clsx from "clsx";
 import styles from "./DiagnosticsPage.module.scss";
 import { useGetPatientsQuery } from "../../store";
-import { SearchOutlined } from "@ant-design/icons";
+import { RightOutlined, SearchOutlined } from "@ant-design/icons";
 
 export const DiagnosticsPage = () => {
   const navigate = useNavigate();
@@ -28,8 +28,8 @@ export const DiagnosticsPage = () => {
     return last10ByCodeid;
   }, [patients]);
 
-  const navPatient = (item) => {
-    navigate(`/patient/${item.guid}`);
+  const navPatient = (guid) => {
+    navigate(`/diagnostics/${guid}`);
     localStorage.removeItem("selectedDrugs");
   };
 
@@ -63,7 +63,21 @@ export const DiagnosticsPage = () => {
           ) : (
             <Flex vertical style={{ maxHeight: "600px", overflowY: "auto" }}>
               {filterPatients?.map((item) => (
-                <PatientItem item={item} />
+                <Flex
+                  justify="space-between"
+                  className={clsx(styles.item)}
+                  onClick={() => navPatient(item?.guid)}
+                >
+                  <Flex className={clsx(styles.item_info)}>
+                    <span className={clsx(styles.item_info_fio)}>
+                      {item?.fio}
+                    </span>
+                    <span className={clsx(styles.item_info_bday)}>
+                      {item?.phone}
+                    </span>
+                  </Flex>
+                  <RightOutlined />
+                </Flex>
               ))}
             </Flex>
           )}

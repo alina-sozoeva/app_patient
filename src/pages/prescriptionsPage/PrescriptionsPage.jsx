@@ -1,8 +1,8 @@
-import { Flex, Spin } from "antd";
+import { Empty, Flex, Spin } from "antd";
 
 import { useState } from "react";
 import { PrescriptionItem } from "../../components";
-import { useGetMappedRecipesQuery, useGetRecipeQuery } from "../../store";
+import { useGetMappedRecipesQuery } from "../../store";
 
 import clsx from "clsx";
 import styles from "./PrescriptionsPage.module.scss";
@@ -75,9 +75,13 @@ export const PrescriptionsPage = () => {
           </Flex>
 
           <Flex vertical style={{ maxHeight: "600px", overflowY: "auto" }}>
-            {data?.map((item) => (
-              <PrescriptionItem item={item} onClick={nav} />
-            ))}
+            {data?.length === 0 ? (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            ) : (
+              data?.map((item) => (
+                <PrescriptionItem item={item} onClick={nav} />
+              ))
+            )}
           </Flex>
         </section>
       </main>

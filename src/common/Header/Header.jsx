@@ -69,6 +69,11 @@ export const Header = () => {
     localStorage.removeItem("selectedDrugs");
   };
 
+  const returnNewReferral = () => {
+    navigate(`/diagnostics/${guid}`);
+    localStorage.removeItem("selectedClinic");
+  };
+
   return (
     <header className={clsx(styles.header)}>
       <section className={clsx(styles.header_content, "container")}>
@@ -181,7 +186,7 @@ export const Header = () => {
             >
               <LeftOutlined style={{ width: "60px" }} />{" "}
             </div>
-            <span>Детали</span>
+            <span>Детали рецепта</span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
@@ -238,6 +243,76 @@ export const Header = () => {
               <LeftOutlined style={{ width: "60px" }} />{" "}
             </div>
             <span>Детали рецепта</span>
+            <Dropdown menu={{ items }} trigger={["click"]}>
+              <div onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <button className={clsx(styles.btn)}>
+                    {findUser?.name.charAt(0)}
+                  </button>
+                  <Flex vertical gap={4}>
+                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                  </Flex>
+                  <CaretDownOutlined />
+                </Space>
+              </div>
+            </Dropdown>
+          </Flex>
+        )}
+
+        {path.startsWith("/diagnostics/") && (
+          <Flex justify="space-between" align="center">
+            <div
+              className={clsx(styles.prev_arr)}
+              onClick={() => navigate(`/diagnostics`)}
+            >
+              <LeftOutlined style={{ width: "60px" }} />{" "}
+            </div>
+            <span>ПАЦИЕНТ</span>
+            <Dropdown menu={{ items }} trigger={["click"]}>
+              <div onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <button className={clsx(styles.btn)}>
+                    {findUser?.name.charAt(0)}
+                  </button>
+                  <Flex vertical gap={4}>
+                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                  </Flex>
+                  <CaretDownOutlined />
+                </Space>
+              </div>
+            </Dropdown>
+          </Flex>
+        )}
+        {path.startsWith("/new-referral/") && (
+          <Flex justify="space-between" align="center">
+            <div className={clsx(styles.prev_arr)} onClick={returnNewReferral}>
+              <LeftOutlined style={{ width: "60px" }} />{" "}
+            </div>
+            <span>Создать новое направление</span>
+            <Dropdown menu={{ items }} trigger={["click"]}>
+              <div onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <button className={clsx(styles.btn)}>
+                    {findUser?.name.charAt(0)}
+                  </button>
+                  <Flex vertical gap={4}>
+                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                  </Flex>
+                  <CaretDownOutlined />
+                </Space>
+              </div>
+            </Dropdown>
+          </Flex>
+        )}
+        {path.startsWith("/referral-details/") && (
+          <Flex justify="space-between" align="center">
+            <div
+              className={clsx(styles.prev_arr)}
+              onClick={() => navigate(`/new-referral/${guid}`)}
+            >
+              <LeftOutlined style={{ width: "60px" }} />{" "}
+            </div>
+            <span>Детали направления</span>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>
                 <Space>

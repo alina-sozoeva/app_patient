@@ -10,3 +10,6 @@ export * from "./prescriptionItemPage";
 export * from "./reportsPage";
 export * from "./diagnosticsPage";
 export * from "./referralPage";
+export * from "./diagnosticsItemPage";
+export * from "./newReferralPage";
+export * from "./referralDetailsPage";

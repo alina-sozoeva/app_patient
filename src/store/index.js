@@ -9,3 +9,6 @@ export * from "./pharmacy";
 export * from "./prescription";
 export * from "./recipeItem";
 export * from "./courses";
+export * from "./clinics";
+export * from "./services";
+export * from "./referral";

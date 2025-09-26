@@ -17,4 +17,7 @@ export const pathname = {
   notifications: "/notifications",
   prescriptionsId: "/prescriptions-written/:codeid/:guid",
   referral: "/referral",
+  diagnosticId: "/diagnostics/:guid",
+  newReferral: "/new-referral/:guid",
+  referralDetails: "/referral-details/:guid",
 };

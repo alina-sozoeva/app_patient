@@ -10,6 +10,9 @@ import { prescriptionApi } from "./prescription";
 import { recipeItemApi } from "./recipeItem";
 import { coursesApi } from "./courses";
 import { userSlices } from "./slices";
+import { clinicsApi } from "./clinics";
+import { servicesApi } from "./services";
+import { referralApi } from "./referral";
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +26,10 @@ export const store = configureStore({
     [prescriptionApi.reducerPath]: prescriptionApi.reducer,
     [recipeItemApi.reducerPath]: recipeItemApi.reducer,
     [coursesApi.reducerPath]: coursesApi.reducer,
+    [clinicsApi.reducerPath]: clinicsApi.reducer,
+    [servicesApi.reducerPath]: servicesApi.reducer,
+    [referralApi.reducerPath]: referralApi.reducer,
+
     user: userSlices.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -37,5 +44,8 @@ export const store = configureStore({
       prescriptionApi.middleware,
       recipeItemApi.middleware,
       coursesApi.middleware,
+      clinicsApi.middleware,
+      servicesApi.middleware,
+      referralApi.middleware,
     ]),
 });

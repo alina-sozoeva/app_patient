@@ -15,7 +15,7 @@ export const PatientItem = ({ item, onClick }) => {
     <Flex
       justify="space-between"
       className={clsx(styles.item)}
-      onClick={onClick}
+      onClick={() => onClick(item?.guid)}
     >
       <Flex className={clsx(styles.item_info)}>
         <span className={clsx(styles.item_info_fio)}>{item?.fio}</span>

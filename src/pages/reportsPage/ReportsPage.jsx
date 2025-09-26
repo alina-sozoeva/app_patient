@@ -80,12 +80,11 @@ export const ReportsPage = () => {
           </Flex>
         </Flex>
 
-        {/* Таблица */}
         <section className={clsx("container")}>
           <Flex
             className={clsx("mt-2")}
             vertical
-            style={{ maxHeight: "350px", overflowY: "auto", gap: "16px" }}
+            style={{ maxHeight: "500px", overflowY: "auto", gap: "16px" }}
           >
             <div className={clsx(styles.recipeCard)}>
               <table className={clsx(styles.recipeTable)}>
@@ -119,7 +118,6 @@ export const ReportsPage = () => {
                     </tr>
                   ))}
 
-                  {/* Итого */}
                   <tr style={{ fontWeight: "bold" }}>
                     <td>Итого</td>
                     {selectedFilter === "drug" && <td></td>}
@@ -134,7 +132,6 @@ export const ReportsPage = () => {
             </div>
           </Flex>
 
-          {/* Кнопка на главную */}
           <div className={clsx("container", styles.create_btn_wrap)}>
             <button
               className={clsx(styles.create_btn_home)}

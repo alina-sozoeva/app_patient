@@ -39,3 +39,43 @@
   align-items: center;
   width: 300px;
 }
+
+.search {
+  padding: 10px 20px;
+  border-bottom: 2px solid var(--grey-color);
+}
+
+.btn {
+  span {
+    color: var(--blue-color);
+  }
+  button {
+    padding: 1px 5px;
+    border-radius: 5px;
+    span,
+    svg {
+      color: var(--white-color);
+      font-size: 10px;
+    }
+    background-color: var(--blue-color);
+  }
+}
+
+.strength {
+  background-color: var(--bg-grey-color);
+  padding: 10px 20px;
+  cursor: pointer;
+
+  span {
+    color: var(--primary-color);
+  }
+
+  svg {
+    color: var(--dark-grey-color);
+  }
+}
+
+.item_check {
+  background-color: var(--green-color);
+  color: white;
+}
