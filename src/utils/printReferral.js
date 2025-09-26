@@ -22,75 +22,131 @@ export const printReferral = ({ prescription, findPatient, user }) => {
   <head>
     <title>Выписанное направление</title>
     <style>
-      body { 
-        font-family: 'Times New Roman', Georgia, serif; 
-        padding: 30px; 
+      body {
+        font-family: Arial, sans-serif;
+        padding: 30px;
         color: #000;
+        font-size: 14px;
+        line-height: 1.4;
       }
-      h1 { 
-        font-size: 24px; 
-        font-weight: bold;
-        margin-bottom: 20px;
+
+      .container {
+        border: 2px solid #000;
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
       }
+
       .header {
-        display: flex; 
-        justify-content: space-between; 
+        display: flex;
+        justify-content: space-between;
         margin-bottom: 20px;
-        font-size: 14px;
       }
-      table { 
-        width: 100%; 
-        border-collapse: collapse; 
-        font-size: 14px;
+
+      .clinic-logo {
+        max-height: 60px;
+        margin-bottom: 10px;
       }
-      th, td { 
-        border: 1px solid #000; 
-        padding: 6px 10px; 
+
+      h1 {
+        text-align: center;
+        font-size: 22px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .patient-info, .doctor-info {
+        margin-bottom: 15px;
+      }
+
+      .info-row {
+        margin-bottom: 5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      th, td {
+        border: 1px solid #000;
+        padding: 8px;
         text-align: left;
       }
-      th { 
-        background-color: #f0f0f0; 
+
+      th {
+        background-color: #f0f0f0;
+      }
+
+      .footer {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .signature {
+        border-top: 1px solid #000;
+        width: 200px;
+        text-align: center;
+        margin-top: 40px;
+      }
+
+      @media print {
+        body {
+          padding: 0;
+        }
+        .container {
+          border: none;
+          padding: 0;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Выписанное направление</h1>
+    <div class="container">
+      <img src="https://via.placeholder.com/150x50?text=Логотип+клиники" class="clinic-logo" alt="Логотип клиники"/>
+      <h1>Направление на услуги</h1>
 
-    <div class="header">
-      <div>
-        ${findPatient?.fio || "-"}<br/>
-       ${dayjs(findPatient?.birth_date).format("DD.MM.YYYY")}
+      <div class="header">
+        <div class="patient-info">
+          <div class="info-row">${findPatient?.fio || "-"}</div>
+          <div class="info-row">${dayjs(findPatient?.birth_date).format(
+            "DD.MM.YYYY"
+          )}</div>
+        </div>
+        <div class="doctor-info">
+          <div class="info-row"><b>Врач:</b> ${user?.nameid || "-"}</div>
+          <div class="info-row"><b>Дата создания:</b> ${dayjs
+            .utc(prescription.created_at)
+            .format("DD.MM.YYYY HH:mm")}</div>
+        </div>
       </div>
-      <div>
-        Врач: ${user?.nameid || "-"}<br/>
-        Дата создания: ${dayjs
-          .utc(prescription.created_at)
-          .format("DD.MM.YYYY HH:mm")}
-      </div>
-    </div>
 
-    <div>
-      <b>Клиника:</b> ${prescription?.clinicName || "-"}
-    </div>
+      <div class="info-row"><b>Клиника:</b> ${
+        prescription?.clinicName || "-"
+      }</div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Услуги</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${prescription.items
-          .map(
-            (item) => `
+      <table>
+        <thead>
           <tr>
-            <td>${item.serviceName || "-"}</td>
+            <th>Услуга</th>
           </tr>
-        `
-          )
-          .join("")}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          ${prescription.items
+            .map(
+              (item) => `
+            <tr>
+              <td>${item.serviceName || "-"}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>
   </body>
 </html>
 `;
