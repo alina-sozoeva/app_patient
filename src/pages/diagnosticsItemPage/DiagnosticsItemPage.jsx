@@ -1,40 +1,23 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Empty, Flex, Spin } from "antd";
+import { Flex, Spin } from "antd";
 
-import {
-  CalendarOutlined,
-  MailOutlined,
-  MessageOutlined,
-  PhoneFilled,
-  RedoOutlined,
-} from "@ant-design/icons";
+import { MailOutlined, PhoneFilled } from "@ant-design/icons";
 import { gender } from "../../enums";
 import { useState } from "react";
 import { EditPatientModal } from "../../components";
 
 import {
-  useAddPatientPrescriptionMutation,
   useGetClinicsQuery,
-  useGetCoursesQuery,
-  useGetDoseQuery,
-  useGetDrugQuery,
-  useGetFrequencyQuery,
-  useGetMethodUseQuery,
   useGetPatientsQuery,
-  useGetRecipeItemQuery,
-  useGetRecipeQuery,
   useGetReferralsItemQuery,
   useGetReferralsQuery,
   useGetServicesQuery,
 } from "../../store";
 
-import { MdSaveAlt } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { users } from "../../data";
-import { FaUserDoctor } from "react-icons/fa6";
 
-import { printPrescription } from "../../utils";
-import { useMappedRecipes } from "../../hooks";
+import { printPrescription, printReferral } from "../../utils";
 
 import styles from "./DiagnosticsItemPage.module.scss";
 import clsx from "clsx";
@@ -64,7 +47,7 @@ export const DiagnosticsItemPage = () => {
   const findPatient = patients?.find((item) => item?.guid === guid);
 
   const handlePrint = async (prescription) => {
-    printPrescription({ prescription, findPatient, findUser });
+    printReferral({ prescription, findPatient, findUser });
   };
 
   return (
