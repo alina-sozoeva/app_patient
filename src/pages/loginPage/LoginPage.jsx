@@ -1,35 +1,35 @@
 import { useForm } from "antd/es/form/Form";
-import { Button, Flex, Form, Input, Typography } from "antd";
+import { Flex, Form, Input, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
+
+import { toast } from "react-toastify";
+import { useAddDoctorMutation } from "../../store";
+
 import styles from "./LoginPage.module.scss";
 import clsx from "clsx";
-import { useDispatch } from "react-redux";
-import { addUserId } from "../../store/slices";
-import { users } from "../../data";
-import { toast } from "react-toastify";
-import { pathname } from "../../enums";
 
 export const LoginPage = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [form] = useForm();
 
+  const [login] = useAddDoctorMutation();
+
   const onFinish = async (values) => {
-    console.log(values);
+    try {
+      await login({
+        login: values.login,
+        password: values.password,
+      }).unwrap();
 
-    const findUser = users.find(
-      (item) =>
-        item.login === values.login && +item.password === +values.password
-    );
-
-    if (!findUser) {
-      return toast.error("Неверный пароль или логин! Попробуйте заново");
-    } else {
-      dispatch(addUserId(findUser.id));
+      navigate("/");
+      form.resetFields();
+    } catch (error) {
+      if (error.status === 401) {
+        toast.error("Неверный пароль или логин!");
+      } else {
+        toast.error("Произошла ошибка, попробуйте позже");
+      }
     }
-
-    form.resetFields();
-    navigate(pathname.home);
   };
 
   return (

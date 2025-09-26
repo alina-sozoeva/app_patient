@@ -58,8 +58,7 @@ export const PatientPage = () => {
   const { data: courses } = useGetCoursesQuery();
   const [add] = useAddPatientPrescriptionMutation();
 
-  const userId = useSelector((state) => state.user.userId);
-  const findUser = users.find((item) => item.id === +userId);
+  const user = useSelector((state) => state.user.user);
 
   const findPatient = patients?.find((item) => item?.guid === guid);
 
@@ -91,7 +90,7 @@ export const PatientPage = () => {
   });
 
   const handlePrint = async (prescription) => {
-    printPrescription({ prescription, findPatient, findUser });
+    printPrescription({ prescription, findPatient, user });
   };
 
   const handleRepeatPrescription = async (prescription) => {
@@ -220,7 +219,7 @@ export const PatientPage = () => {
                 >
                   <Flex align="center" className={clsx("gap-[5px]")}>
                     <FaUserDoctor />
-                    {findUser?.name}
+                    {user?.nameid}
                   </Flex>
 
                   <p>

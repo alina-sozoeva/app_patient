@@ -13,6 +13,7 @@ import { userSlices } from "./slices";
 import { clinicsApi } from "./clinics";
 import { servicesApi } from "./services";
 import { referralApi } from "./referral";
+import { doctorApi } from "./doctors";
 
 export const store = configureStore({
   reducer: {
@@ -29,6 +30,7 @@ export const store = configureStore({
     [clinicsApi.reducerPath]: clinicsApi.reducer,
     [servicesApi.reducerPath]: servicesApi.reducer,
     [referralApi.reducerPath]: referralApi.reducer,
+    [doctorApi.reducerPath]: doctorApi.reducer,
 
     user: userSlices.reducer,
   },
@@ -47,5 +49,6 @@ export const store = configureStore({
       clinicsApi.middleware,
       servicesApi.middleware,
       referralApi.middleware,
+      doctorApi.middleware,
     ]),
 });

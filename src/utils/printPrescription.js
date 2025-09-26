@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 export const printPrescription = async ({
   prescription,
   findPatient,
-  findUser,
+  user,
 }) => {
   let iframe = document.getElementById("print-iframe");
   if (!iframe) {
@@ -114,7 +114,7 @@ export const printPrescription = async ({
         ${dayjs(findPatient?.birth_date).format("DD.MM.YYYY")}
       </div>
       <div>
-        ${findUser?.name || "-"}<br/>
+        ${user?.nameid || "-"}<br/>
         ${dayjs.utc(prescription.created_at).format("DD.MM.YYYY HH:mm")}
       </div>
     </div>

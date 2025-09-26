@@ -12,3 +12,4 @@ export * from "./courses";
 export * from "./clinics";
 export * from "./services";
 export * from "./referral";
+export * from "./doctors";

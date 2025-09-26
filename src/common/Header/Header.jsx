@@ -9,7 +9,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { pathname } from "../../enums";
 import { useDispatch, useSelector } from "react-redux";
 import { users } from "../../data";
-import { removeUserId } from "../../store/slices";
+import { removeUser } from "../../store/slices";
 
 import styles from "./Header.module.scss";
 import clsx from "clsx";
@@ -21,16 +21,18 @@ export const Header = () => {
   const location = useLocation();
 
   const path = location.pathname;
-  const userId = useSelector((state) => state.user.userId);
-  const findUser = users.find((item) => item.id === +userId);
+  const user = useSelector((state) => state.user.user);
+  // const user = users.find((item) => item.id === +userId);
 
   const logOut = () => {
-    dispatch(removeUserId());
+    dispatch(removeUser());
   };
+
+  console.log(user, "user");
 
   const items = [
     {
-      label: <p>{findUser?.login}</p>,
+      label: <p>{user?.login}</p>,
       key: "0",
     },
 
@@ -94,10 +96,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>
@@ -119,10 +121,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>
@@ -143,10 +145,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>
@@ -167,10 +169,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>
@@ -191,10 +193,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>
@@ -223,10 +225,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>
@@ -247,10 +249,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>
@@ -272,10 +274,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>
@@ -293,10 +295,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>
@@ -317,10 +319,10 @@ export const Header = () => {
               <div onClick={(e) => e.preventDefault()}>
                 <Space>
                   <button className={clsx(styles.btn)}>
-                    {findUser?.name.charAt(0)}
+                    {user?.nameid?.charAt(0)}
                   </button>
                   <Flex vertical gap={4}>
-                    <p className={clsx(styles.user_info)}>{findUser?.login}</p>
+                    <p className={clsx(styles.user_info)}>{user?.login}</p>
                   </Flex>
                   <CaretDownOutlined />
                 </Space>

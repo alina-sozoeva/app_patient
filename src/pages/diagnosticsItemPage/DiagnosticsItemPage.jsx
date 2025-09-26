@@ -1,7 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Flex, Spin } from "antd";
+import { Button, Empty, Flex, Spin } from "antd";
 
-import { MailOutlined, PhoneFilled } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  MailOutlined,
+  MessageOutlined,
+  PhoneFilled,
+} from "@ant-design/icons";
 import { gender } from "../../enums";
 import { useState } from "react";
 import { EditPatientModal } from "../../components";
@@ -25,6 +30,9 @@ import clsx from "clsx";
 import utc from "dayjs/plugin/utc";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
+import { useMappedReferrals } from "../../hooks";
+import { FaUserDoctor } from "react-icons/fa6";
+import { MdSaveAlt } from "react-icons/md";
 
 dayjs.locale("ru");
 dayjs.extend(utc);
@@ -41,14 +49,24 @@ export const DiagnosticsItemPage = () => {
   const { data: clinics } = useGetClinicsQuery();
   const { data: services } = useGetServicesQuery();
 
-  const userId = useSelector((state) => state.user.userId);
-  const findUser = users.find((item) => item.id === +userId);
+  const user = useSelector((state) => state.user.user);
 
   const findPatient = patients?.find((item) => item?.guid === guid);
 
   const handlePrint = async (prescription) => {
-    printReferral({ prescription, findPatient, findUser });
+    printReferral({ prescription, findPatient, user });
   };
+
+  const mappedReferrals = useMappedReferrals({
+    referrals,
+    referralsItem,
+    services,
+    clinics,
+  });
+
+  const filter = mappedReferrals.filter(
+    (item) => +item?.patient_codeid === +findPatient?.codeid
+  );
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -106,7 +124,7 @@ export const DiagnosticsItemPage = () => {
         </section>
 
         <section className={clsx("container")}>
-          {/* <Flex
+          <Flex
             className={clsx("mt-2")}
             vertical
             style={{
@@ -115,89 +133,93 @@ export const DiagnosticsItemPage = () => {
               gap: "16px",
             }}
           >
-            {mappedRecipesWithNames?.map((item) => (
-              <div className={clsx(styles.recipeCard)}>
-                <Flex>
-                  <h3>
-                    Рецепт{" "}
-                    <b style={{ color: "var(--primary-color)" }}>
-                      №{item.prescription_codeid}
-                    </b>
-                  </h3>
-                </Flex>
-
-                <Flex
-                  justify="space-between"
-                  className={clsx(styles.recipeCardInfo, "my-2")}
-                >
-                  <Flex align="center" className={clsx("gap-[5px]")}>
-                    <FaUserDoctor />
-                    {findUser?.name}
+            {filter?.length === 0 ? (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            ) : (
+              filter?.map((item) => (
+                <div className={clsx(styles.recipeCard)}>
+                  <Flex>
+                    <h3>
+                      Направление{" "}
+                      <b style={{ color: "var(--primary-color)" }}>
+                        №{item.codeid}
+                      </b>
+                    </h3>
                   </Flex>
 
-                  <p>
-                    <CalendarOutlined style={{ marginRight: 4 }} />
+                  <Flex
+                    justify="space-between"
+                    className={clsx(styles.recipeCardInfo, "my-2")}
+                  >
+                    <Flex align="center" className={clsx("gap-[5px]")}>
+                      <FaUserDoctor />
+                      {user?.nameid}
+                    </Flex>
 
-                    {dayjs.utc(item.created_at).format("DD.MM.YYYY HH:mm")}
-                  </p>
-                </Flex>
+                    <p>
+                      <CalendarOutlined style={{ marginRight: 4 }} />
 
-                <span>
-                  <b>Клиника:</b> йцукен
-                </span>
+                      {dayjs.utc(item.created_at).format("DD.MM.YYYY HH:mm")}
+                    </p>
+                  </Flex>
 
-                <table className={clsx(styles.recipeTable)}>
-                  <thead>
-                    <tr>
-                      <th>Услуги</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {item.items.map((med) => (
-                      <tr key={med.codeid}>
-                        <td>
-                          <span>{med.drugName}</span>
-                        </td>
+                  <span>
+                    <b>Клиника:</b> {item?.clinicName}
+                  </span>
+
+                  <table className={clsx(styles.recipeTable)}>
+                    <thead>
+                      <tr>
+                        <th>Услуги</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {item?.items.map((med) => (
+                        <tr key={med.codeid}>
+                          <td>
+                            <span>{med.serviceName}</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
 
-                <Flex
-                  justify="end"
-                  gap="8px"
-                  className={clsx(styles.recipeActions)}
-                >
-                  <Button
-                    icon={<MdSaveAlt />}
-                    onClick={() => handlePrint(item)}
-                    style={{ backgroundColor: "#1890ff", color: "white" }}
+                  <Flex
+                    justify="end"
+                    gap="8px"
+                    className={clsx(styles.recipeActions)}
                   >
-                    Сохранить
-                  </Button>
+                    <Button
+                      icon={<MdSaveAlt />}
+                      onClick={() => handlePrint(item)}
+                      style={{ backgroundColor: "#1890ff", color: "white" }}
+                    >
+                      Сохранить
+                    </Button>
 
-                  <Button
-                    style={{ backgroundColor: "#52c41a", color: "white" }}
-                    icon={<MessageOutlined />}
-                  >
-                    SMS
-                  </Button>
+                    <Button
+                      style={{ backgroundColor: "#52c41a", color: "white" }}
+                      icon={<MessageOutlined />}
+                    >
+                      SMS
+                    </Button>
 
-                  <Button
-                    type="primary"
-                    icon={<MailOutlined />}
-                    style={{
-                      backgroundColor: "#C8A2C8",
-                      borderColor: "#C8A2C8",
-                      color: "white",
-                    }}
-                  >
-                    Почта
-                  </Button>
-                </Flex>
-              </div>
-            ))}
-          </Flex> */}
+                    <Button
+                      type="primary"
+                      icon={<MailOutlined />}
+                      style={{
+                        backgroundColor: "#C8A2C8",
+                        borderColor: "#C8A2C8",
+                        color: "white",
+                      }}
+                    >
+                      Почта
+                    </Button>
+                  </Flex>
+                </div>
+              ))
+            )}
+          </Flex>
 
           <div className={clsx("container", styles.create_btn_wrap)}>
             <button
