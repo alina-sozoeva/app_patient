@@ -35,10 +35,8 @@ export const ReportsPage = () => {
     isLoading: isLoadingDrugs,
   } = useGetMonthlyDrugReportQuery();
 
-  // Выбираем массив для текущей вкладки
   const filter = selectedFilter === "recipe" ? prescriptions : drugs;
 
-  // Итоги
   const totalIssued =
     selectedFilter === "recipe"
       ? filter?.reduce((sum, item) => sum + (item.total_prescriptions || 0), 0)
@@ -55,7 +53,6 @@ export const ReportsPage = () => {
   return (
     <Spin spinning={loading}>
       <main className={clsx(styles.patient, "relative")}>
-        {/* Фильтр кнопками */}
         <Flex
           vertical
           className={clsx(styles.prescrip_add, "container")}

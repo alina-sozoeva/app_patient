@@ -1,0 +1,25 @@
+{
+  "form": {
+    "errorMessage": "Ин майдон ҳатмӣ аст!"
+  },
+
+  "login": {
+    "enterUsername": "Логинро ворид кунед",
+    "enterPassword": "Рамзро ворид кунед",
+    "title": "Воридшавӣ",
+    "username": "Логин",
+    "password": "Рамз",
+    "submit": "Ворид шудан",
+    "company": "Ҳалҳои рақамӣ \"Бехруз Софт\"",
+    "phone": "Рақами телефон",
+    "email": "Почта"
+  },
+
+  "home": {
+    "newPrescription": "Рецепти нав",
+    "prescriptions": "Рецептҳои содиршуда",
+    "reports": "Ҳисоботҳо",
+    "diagnostics": "Диагностика",
+    "notifications": "Огоҳиномаҳо"
+  }
+}

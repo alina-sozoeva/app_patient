@@ -7,10 +7,13 @@ import { useAddDoctorMutation } from "../../store";
 
 import styles from "./LoginPage.module.scss";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [form] = useForm();
+
+  const { t } = useTranslation();
 
   const [login] = useAddDoctorMutation();
 
@@ -41,46 +44,49 @@ export const LoginPage = () => {
         className={styles.form}
       >
         <Typography.Title level={3} className={styles.formTitle}>
-          Авторизация
+          {t("login.title")}
         </Typography.Title>
         <Form.Item
           name="login"
-          label="Логин"
+          label={t("login.username")}
           rules={[
             {
               required: true,
-              message: "Это обязательное поле для заполнения!",
+              message: t("form.errorMessage"),
             },
           ]}
         >
-          <Input placeholder="Введите логин" style={{ width: "250px" }} />
+          <Input
+            placeholder={t("login.enterUsername")}
+            style={{ width: "250px" }}
+          />
         </Form.Item>
         <Form.Item
           name="password"
-          label="Пароль"
+          label={t("login.password")}
           rules={[
             {
               required: true,
-              message: "Это обязательное поле для заполнения!",
+              message: t("form.errorMessage"),
             },
           ]}
         >
           <Input.Password
-            placeholder="Введите пароль"
+            placeholder={t("login.enterPassword")}
             style={{ width: "250px" }}
           />
         </Form.Item>
         <Form.Item>
           <Flex align="center" justify="center" className={clsx("w-full")}>
-            <button className={clsx(styles.btn)}>Войти</button>
+            <button className={clsx(styles.btn)}>{t("login.submit")}</button>
           </Flex>
         </Form.Item>
 
         <Flex vertical className={clsx(styles.info)}>
-          <span>Цифровые решения "Бехруз Софт"</span>
-          <span>Номер телефона: +996(555)-954-120</span>
+          <span>{t("login.company")}</span>
+          <span>{t("login.phone")}: +996(555)-954-120</span>
           <span>WhatsApp: +996(555)-954-120</span>
-          <span>Почта: admin@333.kg</span>
+          <span>{t("login.email")}: admin@333.kg</span>
         </Flex>
       </Form>
     </section>

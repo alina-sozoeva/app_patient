@@ -14,36 +14,39 @@ import {
 } from "react-icons/hi2";
 
 import { MedicineBoxOutlined } from "@ant-design/icons";
-
-const acts = [
-  {
-    key: 1,
-    icon: <HiOutlineDocumentText />,
-    title: "Выписанные рецепты",
-    path: pathname.prescriptions,
-  },
-  {
-    key: 2,
-    icon: <HiOutlineClipboardDocumentList />,
-    title: "Отчеты",
-    path: pathname.reports,
-  },
-  {
-    key: 3,
-    icon: <MedicineBoxOutlined />,
-    title: "Диагностика",
-    path: pathname.diagnostics,
-  },
-  {
-    key: 4,
-    icon: <HiOutlineBell />,
-    title: "Уведомления",
-    path: pathname.notifications,
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export const HomePage = () => {
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
+
+  const acts = [
+    {
+      key: 1,
+      icon: <HiOutlineDocumentText />,
+      title: t("home.prescriptions"),
+      path: pathname.prescriptions,
+    },
+    {
+      key: 2,
+      icon: <HiOutlineClipboardDocumentList />,
+      title: t("home.reports"),
+      path: pathname.reports,
+    },
+    {
+      key: 3,
+      icon: <MedicineBoxOutlined />,
+      title: t("home.diagnostics"),
+      path: pathname.diagnostics,
+    },
+    {
+      key: 4,
+      icon: <HiOutlineBell />,
+      title: t("home.notifications"),
+      path: pathname.notifications,
+    },
+  ];
 
   return (
     <main>
@@ -56,7 +59,7 @@ export const HomePage = () => {
           onClick={() => navigate(pathname.patients)}
         >
           <img src={rx} alt={rx} />
-          <span>Новый рецепт</span>
+          <span>{t("home.newPrescription")}</span>
         </Flex>
       </div>
       <div className={clsx(styles.actions, "container")}>

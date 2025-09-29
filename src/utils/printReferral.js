@@ -17,6 +17,12 @@ export const printReferral = ({ prescription, findPatient, user }) => {
   const doc = iframe.contentWindow.document;
   doc.open();
 
+  const servicesHtml = prescription.items
+    .map(
+      (item) => `<div>${item.serviceName || "-"} - ${item.price || "-"}</div>`
+    )
+    .join("");
+
   const html = `
 <html>
   <head>
@@ -64,20 +70,8 @@ export const printReferral = ({ prescription, findPatient, user }) => {
         margin-bottom: 5px;
       }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
+      .services {
         margin-top: 15px;
-      }
-
-      th, td {
-        border: 1px solid #000;
-        padding: 8px;
-        text-align: left;
-      }
-
-      th {
-        background-color: #f0f0f0;
       }
 
       .footer {
@@ -128,24 +122,9 @@ export const printReferral = ({ prescription, findPatient, user }) => {
         prescription?.clinicName || "-"
       }</div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Услуга</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${prescription.items
-            .map(
-              (item) => `
-            <tr>
-              <td>${item.serviceName || "-"}</td>
-            </tr>
-          `
-            )
-            .join("")}
-        </tbody>
-      </table>
+      <div class="services">
+        ${servicesHtml}
+      </div>
     </div>
   </body>
 </html>

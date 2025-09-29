@@ -20,9 +20,7 @@ import {
 } from "../../store";
 
 import { useSelector } from "react-redux";
-import { users } from "../../data";
-
-import { printPrescription, printReferral } from "../../utils";
+import { printReferral } from "../../utils";
 
 import styles from "./DiagnosticsItemPage.module.scss";
 import clsx from "clsx";
@@ -64,9 +62,11 @@ export const DiagnosticsItemPage = () => {
     clinics,
   });
 
-  const filter = mappedReferrals.filter(
+  const filter = mappedReferrals?.filter(
     (item) => +item?.patient_codeid === +findPatient?.codeid
   );
+
+  console.log(filter, "filter");
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -171,14 +171,16 @@ export const DiagnosticsItemPage = () => {
                     <thead>
                       <tr>
                         <th>Услуги</th>
+                        <th>Цена</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {item?.items.map((med) => (
+                      {(item?.items ?? []).map((med) => (
                         <tr key={med.codeid}>
                           <td>
                             <span>{med.serviceName}</span>
                           </td>
+                          <td>{med.price}</td>
                         </tr>
                       ))}
                     </tbody>

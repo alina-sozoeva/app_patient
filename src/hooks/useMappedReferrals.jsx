@@ -27,6 +27,7 @@ export const useMappedReferrals = ({
             return {
               ...item,
               serviceName: service?.nameid || "",
+              price: service?.price || "",
             };
           }),
         };

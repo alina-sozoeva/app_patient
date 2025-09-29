@@ -1,0 +1,29 @@
+{
+  "form": {
+    "errorMessage": "Это обязательное поле для заполнения!"
+  },
+
+  "header": {},
+
+  "login": {
+    "enterUsername": "Введите логин",
+    "enterPassword": "Введите пароль",
+    "title": "Авторизация",
+    "username": "Логин",
+    "password": "Пароль",
+    "submit": "Войти",
+    "company": "Цифровые решения \"Бехруз Софт\"",
+    "phone": "Номер телефона",
+    "email": "Почта"
+  },
+
+  "home": {
+    "newPrescription": "Новый рецепт",
+    "prescriptions": "Выписанные рецепты",
+    "reports": "Отчеты",
+    "diagnostics": "Диагностика",
+    "notifications": "Уведомления"
+  },
+
+  "patient": {}
+}
