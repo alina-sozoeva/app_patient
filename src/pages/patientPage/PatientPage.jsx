@@ -133,6 +133,8 @@ export const PatientPage = () => {
 
   console.log(mappedRecipesWithNames, "mappedRecipesWithNames");
 
+  console.log(findPatient?.email === "", "findPatient?.email");
+
   return (
     <Spin spinning={isLoading || isFetching}>
       <main className={clsx(styles.patient, "relative")}>
@@ -163,12 +165,17 @@ export const PatientPage = () => {
                   </span>
                 </Flex>
                 <span className={clsx(styles.patient_info_gender)}></span>
-                <span className={clsx(styles.patient_info_gender)}>
-                  <PhoneFilled /> {findPatient?.phone}
-                </span>
-                <span className={clsx(styles.patient_info_gender)}>
-                  <MailOutlined /> {findPatient?.email}
-                </span>
+                {findPatient?.phone && (
+                  <span className={clsx(styles.patient_info_gender)}>
+                    <PhoneFilled /> {findPatient?.phone}
+                  </span>
+                )}
+
+                {findPatient?.email && (
+                  <span className={clsx(styles.patient_info_gender)}>
+                    <MailOutlined /> {findPatient?.email}
+                  </span>
+                )}
               </Flex>
               <button
                 className={clsx(styles.create_btn)}

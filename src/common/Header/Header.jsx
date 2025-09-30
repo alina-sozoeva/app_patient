@@ -155,12 +155,12 @@ export const Header = () => {
           <Flex justify="space-between" align="center">
             <span>LOGO</span>
 
-            <Select
+            {/* <Select
               defaultValue={"ru"}
               options={lang}
               onChange={(value) => i18n.changeLanguage(value)}
               className={clsx(styles.lang)}
-            />
+            /> */}
 
             <Dropdown menu={{ items }} trigger={["click"]}>
               <div onClick={(e) => e.preventDefault()}>

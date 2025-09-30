@@ -98,12 +98,17 @@ export const DiagnosticsItemPage = () => {
                   </span>
                 </Flex>
                 <span className={clsx(styles.patient_info_gender)}></span>
-                <span className={clsx(styles.patient_info_gender)}>
-                  <PhoneFilled /> {findPatient?.phone}
-                </span>
-                <span className={clsx(styles.patient_info_gender)}>
-                  <MailOutlined /> {findPatient?.email}
-                </span>
+                {findPatient?.phone && (
+                  <span className={clsx(styles.patient_info_gender)}>
+                    <PhoneFilled /> {findPatient?.phone}
+                  </span>
+                )}
+
+                {findPatient?.email && (
+                  <span className={clsx(styles.patient_info_gender)}>
+                    <MailOutlined /> {findPatient?.email}
+                  </span>
+                )}
               </Flex>
               <button
                 className={clsx(styles.create_btn)}

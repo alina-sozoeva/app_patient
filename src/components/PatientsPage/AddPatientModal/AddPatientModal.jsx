@@ -46,7 +46,7 @@ export const AddPatientModal = ({ open, onCancel, title }) => {
         birth_date: dayjs(values.birth_date).format("YYYY-MM-DD"),
         gender: checkedMan ? 1 : 0,
         phone: values?.phone,
-        email: values?.email,
+        email: values?.email || null,
       }).unwrap();
 
       console.log(result);
@@ -108,7 +108,7 @@ export const AddPatientModal = ({ open, onCancel, title }) => {
           </Form.Item>
 
           <Form.Item
-            label={`Номер телефона ${title}`}
+            label={`Номер телефона ${title} (WhatsApp)`}
             name="phone"
             rules={[
               {
@@ -120,16 +120,7 @@ export const AddPatientModal = ({ open, onCancel, title }) => {
             <Input placeholder="Введите ФИО" />
           </Form.Item>
 
-          <Form.Item
-            label={`Email ${title}`}
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Это обязательное поле для заполнения!",
-              },
-            ]}
-          >
+          <Form.Item label={`Email ${title}`} name="email">
             <Input placeholder="Введите email" />
           </Form.Item>
 
