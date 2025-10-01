@@ -295,18 +295,19 @@ export const PatientPage = () => {
                   >
                     SMS
                   </Button>
-
-                  <Button
-                    type="primary"
-                    icon={<MailOutlined />}
-                    style={{
-                      backgroundColor: "#C8A2C8",
-                      borderColor: "#C8A2C8",
-                      color: "white",
-                    }}
-                  >
-                    Почта
-                  </Button>
+                  {findPatient?.email && (
+                    <Button
+                      type="primary"
+                      icon={<MailOutlined />}
+                      style={{
+                        backgroundColor: "#C8A2C8",
+                        borderColor: "#C8A2C8",
+                        color: "white",
+                      }}
+                    >
+                      Почта
+                    </Button>
+                  )}
                 </Flex>
               </div>
             ))}

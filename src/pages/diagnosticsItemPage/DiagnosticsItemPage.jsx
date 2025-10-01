@@ -22,15 +22,16 @@ import {
 import { useSelector } from "react-redux";
 import { printReferral } from "../../utils";
 
+import { useMappedReferrals } from "../../hooks";
+import { FaUserDoctor } from "react-icons/fa6";
+import { MdSaveAlt } from "react-icons/md";
+
 import styles from "./DiagnosticsItemPage.module.scss";
 import clsx from "clsx";
 
 import utc from "dayjs/plugin/utc";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
-import { useMappedReferrals } from "../../hooks";
-import { FaUserDoctor } from "react-icons/fa6";
-import { MdSaveAlt } from "react-icons/md";
 
 dayjs.locale("ru");
 dayjs.extend(utc);
@@ -211,17 +212,19 @@ export const DiagnosticsItemPage = () => {
                       SMS
                     </Button>
 
-                    <Button
-                      type="primary"
-                      icon={<MailOutlined />}
-                      style={{
-                        backgroundColor: "#C8A2C8",
-                        borderColor: "#C8A2C8",
-                        color: "white",
-                      }}
-                    >
-                      Почта
-                    </Button>
+                    {findPatient?.email && (
+                      <Button
+                        type="primary"
+                        icon={<MailOutlined />}
+                        style={{
+                          backgroundColor: "#C8A2C8",
+                          borderColor: "#C8A2C8",
+                          color: "white",
+                        }}
+                      >
+                        Почта
+                      </Button>
+                    )}
                   </Flex>
                 </div>
               ))

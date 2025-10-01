@@ -2,6 +2,7 @@ import {
   CaretDownOutlined,
   LeftOutlined,
   LogoutOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { Dropdown, Flex, Select, Space } from "antd";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -56,7 +57,11 @@ export const Header = () => {
 
   const items = [
     {
-      label: <p>{user?.login}</p>,
+      label: (
+        <Space>
+          <UserOutlined /> {user?.login}
+        </Space>
+      ),
       key: "0",
     },
 

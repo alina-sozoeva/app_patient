@@ -33,6 +33,8 @@ export const PatientsPage = () => {
     localStorage.removeItem("selectedDrugs");
   };
 
+  console.log(filterPatients, "filterPatients");
+
   return (
     <Spin spinning={isLoading || isFetching}>
       <main>
