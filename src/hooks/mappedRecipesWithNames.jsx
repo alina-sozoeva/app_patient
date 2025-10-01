@@ -8,9 +8,15 @@ export const useMappedRecipes = ({
   methodUse,
   courses,
   frequency,
+  doctors, // добавляем сюда
 }) => {
   return useMemo(() => {
     if (!groupedRecipes) return [];
+
+    const doctorsMap = doctors?.reduce((acc, doc) => {
+      acc[doc.codeid] = doc;
+      return acc;
+    }, {});
 
     return Object.entries(groupedRecipes)
       .sort((a, b) => +b[0] - +a[0])
@@ -19,10 +25,14 @@ export const useMappedRecipes = ({
           (r) => +r.codeid === +prescription_codeid
         );
 
+        const doctor = doctorsMap[recipeData?.doctor_codeid];
+
         return {
           prescription_codeid,
           created_at: recipeData?.created_at,
           status: recipeData?.status,
+          doctorName: doctor?.nameid || "-", // имя врача
+          doctorPhone: doctor?.phone || "-", // телефон врача
           items: items.map((item) => {
             const drug = drugs?.find((d) => d.codeid === +item.drug_codeid);
             const dose = doses?.find((d) => d.codeid === +item.dose_codeid);
@@ -51,5 +61,14 @@ export const useMappedRecipes = ({
           }),
         };
       });
-  }, [groupedRecipes, findRecipe, drugs, doses, methodUse, courses, frequency]);
+  }, [
+    groupedRecipes,
+    findRecipe,
+    drugs,
+    doses,
+    methodUse,
+    courses,
+    frequency,
+    doctors, // добавляем сюда
+  ]);
 };

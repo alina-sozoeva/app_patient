@@ -18,6 +18,7 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/ru";
+import { useSelector } from "react-redux";
 
 dayjs.extend(utc);
 dayjs.locale("ru");
@@ -28,6 +29,7 @@ const reception = ["до еды", "во время еды", "после еды"]
 export const RxDetailsPage = () => {
   const { guid } = useParams();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
 
   const [dosesOpen, setDosesOpen] = useState(true);
   const [drugSelections, setDrugSelections] = useState({});
@@ -86,7 +88,7 @@ export const RxDetailsPage = () => {
     await add({
       patient,
       recipeItems,
-      doctorCode: 123,
+      doctorCode: user?.codeid,
     }).unwrap();
 
     localStorage.removeItem("selectedDrugs");

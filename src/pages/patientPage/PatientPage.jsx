@@ -15,6 +15,7 @@ import { EditPatientModal } from "../../components";
 import {
   useAddPatientPrescriptionMutation,
   useGetCoursesQuery,
+  useGetDoctorsQuery,
   useGetDoseQuery,
   useGetDrugQuery,
   useGetFrequencyQuery,
@@ -51,6 +52,7 @@ export const PatientPage = () => {
   const { data: patients, isLoading, isFetching } = useGetPatientsQuery();
   const { data: recipe } = useGetRecipeQuery({});
   const { data: recipeItem } = useGetRecipeItemQuery();
+  const { data: doctors } = useGetDoctorsQuery();
   const { data: doses } = useGetDoseQuery();
   const { data: drugs } = useGetDrugQuery({});
   const { data: frequency } = useGetFrequencyQuery();
@@ -87,6 +89,7 @@ export const PatientPage = () => {
     methodUse,
     courses,
     frequency,
+    doctors,
   });
 
   const handlePrint = async (prescription) => {
@@ -119,7 +122,7 @@ export const PatientPage = () => {
         email: findPatient.email,
       },
       recipeItems,
-      doctorCode: 123,
+      doctorCode: user?.codeid,
     };
 
     try {
@@ -226,7 +229,7 @@ export const PatientPage = () => {
                 >
                   <Flex align="center" className={clsx("gap-[5px]")}>
                     <FaUserDoctor />
-                    {user?.nameid}
+                    {item?.doctorName}
                   </Flex>
 
                   <p>

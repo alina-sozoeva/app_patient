@@ -11,10 +11,12 @@ import {
   useGetServicesQuery,
 } from "../../store";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const ReferralDetailsPage = () => {
   const { guid } = useParams();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
 
   const [rxsOpen, setRxsOpen] = useState(true);
   const [search, setSearch] = useState("");
@@ -56,14 +58,13 @@ export const ReferralDetailsPage = () => {
     : sortedServices.slice(0, 10);
 
   const onFinish = async () => {
-    // Массив только чисел
     const serviceIds = selectedServices
       .map((item) => item.codeid)
       .filter(Boolean);
 
     await add({
       services: serviceIds,
-      doctorCode: 123,
+      doctorCode: user?.codeid,
       patientCode: findPatient?.codeid,
       clinicCode: selectedClinic?.codeid,
     }).unwrap();

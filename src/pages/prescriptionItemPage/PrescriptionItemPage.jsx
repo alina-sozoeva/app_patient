@@ -15,6 +15,7 @@ import { EditPatientModal } from "../../components";
 import {
   useAddPatientPrescriptionMutation,
   useGetCoursesQuery,
+  useGetDoctorsQuery,
   useGetDoseQuery,
   useGetDrugQuery,
   useGetFrequencyQuery,
@@ -45,6 +46,7 @@ dayjs.extend(utc);
 export const PrescriptionItemPage = () => {
   const { guid, codeid } = useParams();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
 
   const [openUpdate, setOpenUpdate] = useState(false);
 
@@ -56,10 +58,9 @@ export const PrescriptionItemPage = () => {
   const { data: frequency } = useGetFrequencyQuery();
   const { data: methodUse } = useGetMethodUseQuery();
   const { data: courses } = useGetCoursesQuery();
-  const [add] = useAddPatientPrescriptionMutation();
+  const { data: doctors } = useGetDoctorsQuery();
 
-  const userId = useSelector((state) => state.user.userId);
-  const findUser = users.find((item) => item.id === +userId);
+  const [add] = useAddPatientPrescriptionMutation();
 
   const findPatient = patients?.find((item) => item?.guid === guid);
 
@@ -88,14 +89,17 @@ export const PrescriptionItemPage = () => {
     methodUse,
     courses,
     frequency,
+    doctors,
   });
+
+  console.log(mappedRecipesWithNames, "!!!!");
 
   const test = mappedRecipesWithNames.find(
     (item) => item?.prescription_codeid === codeid
   );
 
   const handlePrint = async (prescription) => {
-    printPrescription({ prescription, findPatient, findUser });
+    printPrescription({ prescription, findPatient, user });
   };
 
   const handleRepeatPrescription = async (prescription) => {
@@ -124,7 +128,7 @@ export const PrescriptionItemPage = () => {
         email: findPatient.email,
       },
       recipeItems,
-      doctorCode: 123,
+      doctorCode: user?.codeid,
     };
 
     try {
@@ -208,7 +212,7 @@ export const PrescriptionItemPage = () => {
               >
                 <Flex align="center" className={clsx("gap-[5px]")}>
                   <FaUserDoctor />
-                  {findUser?.name}
+                  {test?.doctorName}
                 </Flex>
 
                 <p>

@@ -2,7 +2,7 @@ import { Empty, Flex, Input, Spin } from "antd";
 
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AddPatientModal, PatientItem } from "../../components";
+import { AddPatientModal } from "../../components";
 
 import clsx from "clsx";
 import styles from "./DiagnosticsPage.module.scss";

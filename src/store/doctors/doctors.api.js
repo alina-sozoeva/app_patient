@@ -4,8 +4,15 @@ import { addUser } from "../slices";
 export const doctorApi = createApi({
   reducerPath: "doctorApi",
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_MAIN_URL }),
-  tagTypes: ["DoctorList"],
+  tagTypes: ["DoctorsList"],
   endpoints: (builder) => ({
+    getDoctors: builder.query({
+      query: () => ({
+        url: "/doctors",
+        method: "GET",
+      }),
+      providesTags: ["DoctorsList"],
+    }),
     addDoctor: builder.mutation({
       query: (doc) => ({
         url: "/login-doctor",
@@ -20,9 +27,9 @@ export const doctorApi = createApi({
           console.error("Login failed", err);
         }
       },
-      invalidatesTags: ["DoctorList"],
+      invalidatesTags: ["DoctorsList"],
     }),
   }),
 });
 
-export const { useAddDoctorMutation } = doctorApi;
+export const { useGetDoctorsQuery, useAddDoctorMutation } = doctorApi;

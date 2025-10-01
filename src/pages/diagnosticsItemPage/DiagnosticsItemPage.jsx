@@ -13,6 +13,7 @@ import { EditPatientModal } from "../../components";
 
 import {
   useGetClinicsQuery,
+  useGetDoctorsQuery,
   useGetPatientsQuery,
   useGetReferralsItemQuery,
   useGetReferralsQuery,
@@ -47,6 +48,7 @@ export const DiagnosticsItemPage = () => {
   const { data: referralsItem } = useGetReferralsItemQuery();
   const { data: clinics } = useGetClinicsQuery();
   const { data: services } = useGetServicesQuery();
+  const { data: doctors } = useGetDoctorsQuery();
 
   const user = useSelector((state) => state.user.user);
 
@@ -61,13 +63,12 @@ export const DiagnosticsItemPage = () => {
     referralsItem,
     services,
     clinics,
+    doctors,
   });
 
   const filter = mappedReferrals?.filter(
     (item) => +item?.patient_codeid === +findPatient?.codeid
   );
-
-  console.log(filter, "filter");
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -159,7 +160,7 @@ export const DiagnosticsItemPage = () => {
                   >
                     <Flex align="center" className={clsx("gap-[5px]")}>
                       <FaUserDoctor />
-                      {user?.nameid}
+                      {item?.doctorName}
                     </Flex>
 
                     <p>

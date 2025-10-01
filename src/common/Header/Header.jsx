@@ -59,7 +59,7 @@ export const Header = () => {
     {
       label: (
         <Space>
-          <UserOutlined /> {user?.login}
+          <UserOutlined className={clsx("text-blue")} /> Admin
         </Space>
       ),
       key: "0",
@@ -70,8 +70,8 @@ export const Header = () => {
     },
     {
       label: (
-        <Space onClick={logOut}>
-          <LogoutOutlined rotate={270} /> Выйти
+        <Space onClick={() => navigate("/login")}>
+          <LogoutOutlined rotate={270} className={clsx("text-red")} /> Выйти
         </Space>
       ),
       key: "3",
