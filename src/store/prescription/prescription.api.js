@@ -21,16 +21,18 @@ export const prescriptionApi = createApi({
       providesTags: ["PrescriptionList"],
     }),
     getMonthlyPrescriptionReport: builder.query({
-      query: () => ({
+      query: (doctor_codeid) => ({
         url: "/monthly-prescription-report",
         method: "GET",
+        params: doctor_codeid,
       }),
       providesTags: ["PrescriptionList"],
     }),
     getMonthlyDrugReport: builder.query({
-      query: () => ({
+      query: (doctor_codeid) => ({
         url: "/monthly-grug-report",
         method: "GET",
+        params: doctor_codeid,
       }),
       providesTags: ["PrescriptionList"],
     }),

@@ -10,6 +10,7 @@ import {
   useGetMonthlyPrescriptionReportQuery,
 } from "../../store";
 import styles from "./ReportsPage.module.scss";
+import { useSelector } from "react-redux";
 
 dayjs.locale("ru");
 dayjs.extend(utc);
@@ -22,18 +23,21 @@ const btns = [
 export const ReportsPage = () => {
   const navigate = useNavigate();
   const [selectedFilter, setSelectedFilter] = useState("recipe");
+  const user = useSelector((state) => state.user.user);
+
+  console.log(user?.codeid, "user?.codeid");
 
   const {
     data: prescriptions,
     isFetching: isFetchingPrescriptions,
     isLoading: isLoadingPrescriptions,
-  } = useGetMonthlyPrescriptionReportQuery();
+  } = useGetMonthlyPrescriptionReportQuery({ doctor_codeid: user?.codeid });
 
   const {
     data: drugs,
     isFetching: isFetchingDrugs,
     isLoading: isLoadingDrugs,
-  } = useGetMonthlyDrugReportQuery();
+  } = useGetMonthlyDrugReportQuery({ doctor_codeid: user?.codeid });
 
   const filter = selectedFilter === "recipe" ? prescriptions : drugs;
 

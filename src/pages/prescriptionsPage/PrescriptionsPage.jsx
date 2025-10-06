@@ -10,6 +10,7 @@ import styles from "./PrescriptionsPage.module.scss";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 dayjs.extend(utc);
 
 const btns = [
@@ -35,6 +36,7 @@ const btns = [
 export const PrescriptionsPage = () => {
   const navigate = useNavigate();
   const [selectedFilter, setSelectedFilter] = useState("today");
+  const user = useSelector((state) => state.user.user);
 
   const { data, isLoading, isFetching } = useGetMappedRecipesQuery(
     selectedFilter ? { filter: selectedFilter } : undefined
@@ -43,6 +45,10 @@ export const PrescriptionsPage = () => {
   const nav = (codeid, guid) => {
     navigate(`/prescriptions-written/${codeid}/${guid}`);
   };
+
+  const filterdData = data?.filter(
+    (item) => +item?.doctor?.codeid === +user?.codeid
+  );
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -75,10 +81,10 @@ export const PrescriptionsPage = () => {
           </Flex>
 
           <Flex vertical style={{ maxHeight: "600px", overflowY: "auto" }}>
-            {data?.length === 0 ? (
+            {filterdData?.length === 0 ? (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             ) : (
-              data?.map((item) => (
+              filterdData?.map((item) => (
                 <PrescriptionItem item={item} onClick={nav} />
               ))
             )}

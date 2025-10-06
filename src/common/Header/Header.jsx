@@ -59,7 +59,7 @@ export const Header = () => {
     {
       label: (
         <Space>
-          <UserOutlined className={clsx("text-blue")} /> Admin
+          <UserOutlined className={clsx("text-blue")} /> {user?.login}
         </Space>
       ),
       key: "0",

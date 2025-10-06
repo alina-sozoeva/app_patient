@@ -20,6 +20,14 @@ export const referralApi = createApi({
       }),
       providesTags: ["ReferralListItem"],
     }),
+    getMappedReferrals: builder.query({
+      query: (filter) => ({
+        url: "/mapped-referral",
+        method: "GET",
+        params: filter,
+      }),
+      providesTags: ["ReferralList"],
+    }),
 
     createReferral: builder.mutation({
       query: (newReferral) => ({
@@ -35,5 +43,6 @@ export const referralApi = createApi({
 export const {
   useGetReferralsQuery,
   useGetReferralsItemQuery,
+  useGetMappedReferralsQuery,
   useCreateReferralMutation,
 } = referralApi;

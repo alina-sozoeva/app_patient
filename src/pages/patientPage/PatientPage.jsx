@@ -19,6 +19,7 @@ import {
   useGetDoseQuery,
   useGetDrugQuery,
   useGetFrequencyQuery,
+  useGetMappedRecipesQuery,
   useGetMethodUseQuery,
   useGetPatientsQuery,
   useGetRecipeItemQuery,
@@ -46,51 +47,21 @@ dayjs.extend(utc);
 export const PatientPage = () => {
   const { guid } = useParams();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
 
   const [openUpdate, setOpenUpdate] = useState(false);
 
   const { data: patients, isLoading, isFetching } = useGetPatientsQuery();
-  const { data: recipe } = useGetRecipeQuery({});
-  const { data: recipeItem } = useGetRecipeItemQuery();
-  const { data: doctors } = useGetDoctorsQuery();
-  const { data: doses } = useGetDoseQuery();
-  const { data: drugs } = useGetDrugQuery({});
-  const { data: frequency } = useGetFrequencyQuery();
-  const { data: methodUse } = useGetMethodUseQuery();
-  const { data: courses } = useGetCoursesQuery();
   const [add] = useAddPatientPrescriptionMutation();
 
-  const user = useSelector((state) => state.user.user);
+  const { data: mappedData } = useGetMappedRecipesQuery({});
+
+  const filterdData = mappedData?.filter(
+    (item) =>
+      +item?.doctor?.codeid === +user?.codeid && item?.patient?.guid === guid
+  );
 
   const findPatient = patients?.find((item) => item?.guid === guid);
-
-  const findRecipe = recipe?.filter(
-    (item) => +item?.patient_codeid === +findPatient?.codeid
-  );
-
-  const mappedRecipes = recipeItem?.filter((item) =>
-    findRecipe?.some((presc) => presc?.codeid === item?.prescription_codeid)
-  );
-
-  const groupedRecipes = mappedRecipes?.reduce((acc, item) => {
-    const key = item?.prescription_codeid;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(item);
-    return acc;
-  }, {});
-
-  const mappedRecipesWithNames = useMappedRecipes({
-    groupedRecipes,
-    findRecipe: recipe,
-    drugs,
-    doses,
-    methodUse,
-    courses,
-    frequency,
-    doctors,
-  });
 
   const handlePrint = async (prescription) => {
     printPrescription({ prescription, findPatient, user });
@@ -133,10 +104,6 @@ export const PatientPage = () => {
       console.error("Ошибка при повторении рецепта:", err);
     }
   };
-
-  console.log(mappedRecipesWithNames, "mappedRecipesWithNames");
-
-  console.log(findPatient?.email === "", "findPatient?.email");
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -199,7 +166,7 @@ export const PatientPage = () => {
         </section>
 
         <section className={clsx("container")}>
-          {mappedRecipesWithNames?.length === 0 && (
+          {filterdData?.length === 0 && (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
 
@@ -212,7 +179,7 @@ export const PatientPage = () => {
               gap: "16px",
             }}
           >
-            {mappedRecipesWithNames?.map((item) => (
+            {filterdData?.map((item) => (
               <div className={clsx(styles.recipeCard)}>
                 <Flex>
                   <h3>
@@ -229,7 +196,7 @@ export const PatientPage = () => {
                 >
                   <Flex align="center" className={clsx("gap-[5px]")}>
                     <FaUserDoctor />
-                    {item?.doctorName}
+                    {item?.doctor?.name}
                   </Flex>
 
                   <p>

@@ -14,6 +14,7 @@ import { EditPatientModal } from "../../components";
 import {
   useGetClinicsQuery,
   useGetDoctorsQuery,
+  useGetMappedReferralsQuery,
   useGetPatientsQuery,
   useGetReferralsItemQuery,
   useGetReferralsQuery,
@@ -40,35 +41,23 @@ dayjs.extend(utc);
 export const DiagnosticsItemPage = () => {
   const { guid } = useParams();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
 
   const [openUpdate, setOpenUpdate] = useState(false);
 
   const { data: patients, isLoading, isFetching } = useGetPatientsQuery();
-  const { data: referrals } = useGetReferralsQuery();
-  const { data: referralsItem } = useGetReferralsItemQuery();
-  const { data: clinics } = useGetClinicsQuery();
-  const { data: services } = useGetServicesQuery();
-  const { data: doctors } = useGetDoctorsQuery();
-
-  const user = useSelector((state) => state.user.user);
+  const { data: mappedData } = useGetMappedReferralsQuery();
 
   const findPatient = patients?.find((item) => item?.guid === guid);
+
+  const filterdData = mappedData?.filter(
+    (item) =>
+      +item?.doctor?.codeid === +user?.codeid && item?.patient?.guid === guid
+  );
 
   const handlePrint = async (prescription) => {
     printReferral({ prescription, findPatient, user });
   };
-
-  const mappedReferrals = useMappedReferrals({
-    referrals,
-    referralsItem,
-    services,
-    clinics,
-    doctors,
-  });
-
-  const filter = mappedReferrals?.filter(
-    (item) => +item?.patient_codeid === +findPatient?.codeid
-  );
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -140,10 +129,10 @@ export const DiagnosticsItemPage = () => {
               gap: "16px",
             }}
           >
-            {filter?.length === 0 ? (
+            {filterdData?.length === 0 ? (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             ) : (
-              filter?.map((item) => (
+              filterdData?.map((item) => (
                 <div className={clsx(styles.recipeCard)}>
                   <Flex>
                     <h3>
