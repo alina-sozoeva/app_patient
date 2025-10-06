@@ -31,8 +31,8 @@ export const useMappedRecipes = ({
           prescription_codeid,
           created_at: recipeData?.created_at,
           status: recipeData?.status,
-          doctorName: doctor?.nameid || "-", // имя врача
-          doctorPhone: doctor?.phone || "-", // телефон врача
+          doctorName: doctor?.nameid || "-",
+          doctorPhone: doctor?.phone || "-",
           items: items.map((item) => {
             const drug = drugs?.find((d) => d.codeid === +item.drug_codeid);
             const dose = doses?.find((d) => d.codeid === +item.dose_codeid);

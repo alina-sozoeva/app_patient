@@ -117,7 +117,7 @@ export const AddPatientModal = ({ open, onCancel, title }) => {
               },
             ]}
           >
-            <Input placeholder="Введите ФИО" />
+            <Input placeholder="Введите номер телефона" />
           </Form.Item>
 
           <Form.Item label={`Email ${title}`} name="email">

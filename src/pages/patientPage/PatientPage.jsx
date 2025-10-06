@@ -14,26 +14,14 @@ import { EditPatientModal } from "../../components";
 
 import {
   useAddPatientPrescriptionMutation,
-  useGetCoursesQuery,
-  useGetDoctorsQuery,
-  useGetDoseQuery,
-  useGetDrugQuery,
-  useGetFrequencyQuery,
   useGetMappedRecipesQuery,
-  useGetMethodUseQuery,
   useGetPatientsQuery,
-  useGetRecipeItemQuery,
-  useGetRecipeQuery,
 } from "../../store";
 
 import { MdSaveAlt } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { users } from "../../data";
 import { FaUserDoctor } from "react-icons/fa6";
-
 import { printPrescription } from "../../utils";
-import { useMappedRecipes } from "../../hooks";
-
 import styles from "./PatientPage.module.scss";
 import clsx from "clsx";
 
@@ -104,6 +92,8 @@ export const PatientPage = () => {
       console.error("Ошибка при повторении рецепта:", err);
     }
   };
+
+  console.log(filterdData, "filterdData");
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -188,6 +178,7 @@ export const PatientPage = () => {
                       №{item.prescription_codeid}
                     </b>
                   </h3>
+                  {item?.status === 1 && <p></p>}
                 </Flex>
 
                 <Flex

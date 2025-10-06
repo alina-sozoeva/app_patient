@@ -1,12 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Empty, Flex, Spin } from "antd";
+import { Button, Flex, Spin } from "antd";
 
 import {
   CalendarOutlined,
   MailOutlined,
   MessageOutlined,
   PhoneFilled,
-  RedoOutlined,
 } from "@ant-design/icons";
 import { gender } from "../../enums";
 import { useState } from "react";
@@ -14,24 +13,14 @@ import { EditPatientModal } from "../../components";
 
 import {
   useAddPatientPrescriptionMutation,
-  useGetCoursesQuery,
-  useGetDoctorsQuery,
-  useGetDoseQuery,
-  useGetDrugQuery,
-  useGetFrequencyQuery,
-  useGetMethodUseQuery,
+  useGetMappedRecipesQuery,
   useGetPatientsQuery,
-  useGetRecipeItemQuery,
-  useGetRecipeQuery,
 } from "../../store";
 
 import { MdSaveAlt } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { users } from "../../data";
 import { FaUserDoctor } from "react-icons/fa6";
-
 import { printPrescription } from "../../utils";
-import { useMappedRecipes } from "../../hooks";
 
 import styles from "./PrescriptionItemPage.module.scss";
 import clsx from "clsx";
@@ -47,55 +36,16 @@ export const PrescriptionItemPage = () => {
   const { guid, codeid } = useParams();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
-
   const [openUpdate, setOpenUpdate] = useState(false);
 
   const { data: patients, isLoading, isFetching } = useGetPatientsQuery();
-  const { data: recipe } = useGetRecipeQuery({});
-  const { data: recipeItem } = useGetRecipeItemQuery();
-  const { data: doses } = useGetDoseQuery();
-  const { data: drugs } = useGetDrugQuery({});
-  const { data: frequency } = useGetFrequencyQuery();
-  const { data: methodUse } = useGetMethodUseQuery();
-  const { data: courses } = useGetCoursesQuery();
-  const { data: doctors } = useGetDoctorsQuery();
-
+  const { data: mappedData } = useGetMappedRecipesQuery({});
   const [add] = useAddPatientPrescriptionMutation();
 
   const findPatient = patients?.find((item) => item?.guid === guid);
 
-  const findRecipe = recipe?.filter(
-    (item) => +item?.patient_codeid === +findPatient?.codeid
-  );
-
-  const mappedRecipes = recipeItem?.filter((item) =>
-    findRecipe?.some((presc) => presc?.codeid === item?.prescription_codeid)
-  );
-
-  const groupedRecipes = mappedRecipes?.reduce((acc, item) => {
-    const key = item?.prescription_codeid;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(item);
-    return acc;
-  }, {});
-
-  const mappedRecipesWithNames = useMappedRecipes({
-    groupedRecipes,
-    findRecipe: recipe,
-    drugs,
-    doses,
-    methodUse,
-    courses,
-    frequency,
-    doctors,
-  });
-
-  console.log(mappedRecipesWithNames, "!!!!");
-
-  const test = mappedRecipesWithNames.find(
-    (item) => item?.prescription_codeid === codeid
+  const filterdData = mappedData?.find(
+    (item) => +item?.prescription_codeid === +codeid
   );
 
   const handlePrint = async (prescription) => {
@@ -139,8 +89,6 @@ export const PrescriptionItemPage = () => {
       console.error("Ошибка при повторении рецепта:", err);
     }
   };
-
-  console.log(mappedRecipesWithNames, "mappedRecipesWithNames");
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -201,7 +149,7 @@ export const PrescriptionItemPage = () => {
                 <h3>
                   Рецепт{" "}
                   <b style={{ color: "var(--primary-color)" }}>
-                    №{test?.prescription_codeid}
+                    №{filterdData?.prescription_codeid}
                   </b>
                 </h3>
               </Flex>
@@ -212,13 +160,15 @@ export const PrescriptionItemPage = () => {
               >
                 <Flex align="center" className={clsx("gap-[5px]")}>
                   <FaUserDoctor />
-                  {test?.doctorName}
+                  {filterdData?.doctor?.name}
                 </Flex>
 
                 <p>
                   <CalendarOutlined style={{ marginRight: 4 }} />
 
-                  {dayjs.utc(test?.created_at).format("DD.MM.YYYY HH:mm")}
+                  {dayjs
+                    .utc(filterdData?.created_at)
+                    .format("DD.MM.YYYY HH:mm")}
                 </p>
               </Flex>
 
@@ -232,7 +182,7 @@ export const PrescriptionItemPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {test?.items.map((med) => (
+                  {filterdData?.items.map((med) => (
                     <tr key={med.codeid}>
                       <td>
                         <Flex vertical>

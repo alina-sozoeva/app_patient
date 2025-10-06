@@ -61,7 +61,7 @@ export const PrescriptionsPage = () => {
             gap="small"
           >
             <Flex justify="space-between">
-              {btns.map((item) => (
+              {btns?.map((item) => (
                 <button
                   onClick={() => setSelectedFilter(item.label)}
                   style={{
@@ -69,12 +69,12 @@ export const PrescriptionsPage = () => {
                     display: "inline-block",
                   }}
                   className={clsx(
-                    item.label === selectedFilter
+                    item?.label === selectedFilter
                       ? styles.prescrip_btn_active
                       : styles.prescrip_btn
                   )}
                 >
-                  {item.title}
+                  {item?.title}
                 </button>
               ))}
             </Flex>
