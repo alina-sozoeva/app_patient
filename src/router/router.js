@@ -124,6 +124,22 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: pathname.reportsPrescrip,
+        element: (
+          <PrivateRoute>
+            <Pages.PrescriptionsInfo />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: pathname.reportsDrugs,
+        element: (
+          <PrivateRoute>
+            <Pages.DrugsInfo />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: pathname.other,
         element: (
           <PrivateRoute>

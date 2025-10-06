@@ -44,10 +44,9 @@ export const PatientPage = () => {
 
   const { data: mappedData } = useGetMappedRecipesQuery({});
 
-  const filterdData = mappedData?.filter(
-    (item) =>
-      +item?.doctor?.codeid === +user?.codeid && item?.patient?.guid === guid
-  );
+  const filterdData = mappedData
+    ?.filter((item) => +item?.doctor?.codeid === +user?.codeid)
+    ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   const findPatient = patients?.find((item) => item?.guid === guid);
 
@@ -92,8 +91,6 @@ export const PatientPage = () => {
       console.error("Ошибка при повторении рецепта:", err);
     }
   };
-
-  console.log(filterdData, "filterdData");
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -171,14 +168,21 @@ export const PatientPage = () => {
           >
             {filterdData?.map((item) => (
               <div className={clsx(styles.recipeCard)}>
-                <Flex>
+                <Flex justify="space-between">
                   <h3>
                     Рецепт{" "}
                     <b style={{ color: "var(--primary-color)" }}>
                       №{item.prescription_codeid}
                     </b>
                   </h3>
-                  {item?.status === 1 && <p></p>}
+                  {item?.status === 1 && (
+                    <p>
+                      Аптека:{" "}
+                      <b style={{ color: "var(--primary-color)" }}>
+                        {item?.pharmacy?.name}
+                      </b>
+                    </p>
+                  )}
                 </Flex>
 
                 <Flex

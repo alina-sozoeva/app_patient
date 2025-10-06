@@ -11,20 +11,11 @@ import { gender } from "../../enums";
 import { useState } from "react";
 import { EditPatientModal } from "../../components";
 
-import {
-  useGetClinicsQuery,
-  useGetDoctorsQuery,
-  useGetMappedReferralsQuery,
-  useGetPatientsQuery,
-  useGetReferralsItemQuery,
-  useGetReferralsQuery,
-  useGetServicesQuery,
-} from "../../store";
+import { useGetMappedReferralsQuery, useGetPatientsQuery } from "../../store";
 
 import { useSelector } from "react-redux";
 import { printReferral } from "../../utils";
 
-import { useMappedReferrals } from "../../hooks";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdSaveAlt } from "react-icons/md";
 
@@ -50,10 +41,12 @@ export const DiagnosticsItemPage = () => {
 
   const findPatient = patients?.find((item) => item?.guid === guid);
 
-  const filterdData = mappedData?.filter(
-    (item) =>
-      +item?.doctor?.codeid === +user?.codeid && item?.patient?.guid === guid
-  );
+  const filterdData = mappedData
+    ?.filter(
+      (item) =>
+        +item?.doctor?.codeid === +user?.codeid && item?.patient?.guid === guid
+    )
+    ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   const handlePrint = async (prescription) => {
     printReferral({ prescription, findPatient, user });
@@ -138,7 +131,7 @@ export const DiagnosticsItemPage = () => {
                     <h3>
                       Направление{" "}
                       <b style={{ color: "var(--primary-color)" }}>
-                        №{item.codeid}
+                        №{item?.referral_codeid}
                       </b>
                     </h3>
                   </Flex>
@@ -149,7 +142,7 @@ export const DiagnosticsItemPage = () => {
                   >
                     <Flex align="center" className={clsx("gap-[5px]")}>
                       <FaUserDoctor />
-                      {item?.doctorName}
+                      {item?.doctor?.name}
                     </Flex>
 
                     <p>

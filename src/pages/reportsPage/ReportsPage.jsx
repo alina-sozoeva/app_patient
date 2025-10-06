@@ -11,6 +11,7 @@ import {
 } from "../../store";
 import styles from "./ReportsPage.module.scss";
 import { useSelector } from "react-redux";
+import { pathname } from "../../enums";
 
 dayjs.locale("ru");
 dayjs.extend(utc);
@@ -53,6 +54,16 @@ export const ReportsPage = () => {
     selectedFilter === "recipe"
       ? isFetchingPrescriptions || isLoadingPrescriptions
       : isFetchingDrugs || isLoadingDrugs;
+
+  const nav = (date) => {
+    const formattedDate = dayjs(date).format("DD.MM.YYYY");
+
+    if (selectedFilter === "recipe") {
+      navigate(`/reports/prescriptions/${formattedDate}`);
+    } else {
+      navigate(`/reports/drugs/${formattedDate}`);
+    }
+  };
 
   return (
     <Spin spinning={loading}>
@@ -103,7 +114,10 @@ export const ReportsPage = () => {
                 </thead>
                 <tbody>
                   {filter?.map((item) => (
-                    <tr key={item?.day + (item?.drugName || "")}>
+                    <tr
+                      key={item?.day + (item?.drugName || "")}
+                      onClick={() => nav(item?.day)}
+                    >
                       <td>{dayjs.utc(item?.day).format("DD.MM.YYYY")}</td>
                       {selectedFilter === "drug" && <td>{item?.drugName}</td>}
                       <td style={{ textAlign: "center" }}>

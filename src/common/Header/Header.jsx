@@ -32,11 +32,13 @@ const lang = [
 ];
 
 export const Header = () => {
-  const { guid, codeid } = useParams();
+  const { guid, codeid, date } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { i18n } = useTranslation();
+
+  console.log(date, "date");
 
   const path = location.pathname;
   const user = useSelector((state) => state.user.user);
@@ -150,6 +152,18 @@ export const Header = () => {
       title: "Детали направления",
       pathStartsWith: "/referral-details/",
       navigate: () => navigate(`/new-referral/${guid}`),
+    },
+    {
+      key: 13,
+      title: `Детали рецептов за ${date}`,
+      pathStartsWith: "/reports/prescriptions/",
+      navigate: () => navigate(pathname.reports),
+    },
+    {
+      key: 14,
+      title: `Детали медикаментов за ${date}`,
+      pathStartsWith: "/reports/drugs/",
+      navigate: () => navigate(pathname.reports),
     },
   ];
 

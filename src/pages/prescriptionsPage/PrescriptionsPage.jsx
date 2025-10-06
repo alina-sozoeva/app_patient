@@ -46,9 +46,9 @@ export const PrescriptionsPage = () => {
     navigate(`/prescriptions-written/${codeid}/${guid}`);
   };
 
-  const filterdData = data?.filter(
-    (item) => +item?.doctor?.codeid === +user?.codeid
-  );
+  const filterdData = data
+    ?.filter((item) => +item?.doctor?.codeid === +user?.codeid)
+    ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   return (
     <Spin spinning={isLoading || isFetching}>

@@ -20,4 +20,6 @@ export const pathname = {
   diagnosticId: "/diagnostics/:guid",
   newReferral: "/new-referral/:guid",
   referralDetails: "/referral-details/:guid",
+  reportsPrescrip: "/reports/prescriptions/:date",
+  reportsDrugs: "/reports/drugs/:date",
 };

@@ -123,9 +123,12 @@ export const PrescriptionItemPage = () => {
                 <span className={clsx(styles.patient_info_gender)}>
                   <PhoneFilled /> {findPatient?.phone}
                 </span>
-                <span className={clsx(styles.patient_info_gender)}>
-                  <MailOutlined /> {findPatient?.email}
-                </span>
+
+                {findPatient?.email && (
+                  <span className={clsx(styles.patient_info_gender)}>
+                    <MailOutlined /> {findPatient?.email}
+                  </span>
+                )}
               </Flex>
             </Flex>
           </Flex>
