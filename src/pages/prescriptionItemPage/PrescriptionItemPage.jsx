@@ -6,6 +6,7 @@ import {
   MailOutlined,
   MessageOutlined,
   PhoneFilled,
+  RedoOutlined,
 } from "@ant-design/icons";
 import { gender } from "../../enums";
 import { useState } from "react";
@@ -89,6 +90,8 @@ export const PrescriptionItemPage = () => {
       console.error("Ошибка при повторении рецепта:", err);
     }
   };
+
+  console.log(filterdData, "filterdData");
 
   return (
     <Spin spinning={isLoading || isFetching}>
@@ -210,19 +213,19 @@ export const PrescriptionItemPage = () => {
                 gap="8px"
                 className={clsx(styles.recipeActions)}
               >
-                {/* {test?.status === 1 && (
+                {filterdData?.status === 1 && (
                   <Button
                     icon={<RedoOutlined />}
-                    onClick={() => handleRepeatPrescription(test)}
+                    onClick={() => handleRepeatPrescription(filterdData)}
                     style={{ backgroundColor: "#ffa940", color: "white" }}
                   >
                     Повторить
                   </Button>
-                )} */}
+                )}
 
                 <Button
                   icon={<MdSaveAlt />}
-                  onClick={() => handlePrint(test)}
+                  onClick={() => handlePrint(filterdData)}
                   style={{ backgroundColor: "#1890ff", color: "white" }}
                 >
                   Сохранить

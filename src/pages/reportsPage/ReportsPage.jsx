@@ -55,13 +55,13 @@ export const ReportsPage = () => {
       ? isFetchingPrescriptions || isLoadingPrescriptions
       : isFetchingDrugs || isLoadingDrugs;
 
-  const nav = (date) => {
+  const nav = (date, drug) => {
     const formattedDate = dayjs(date).format("DD.MM.YYYY");
 
     if (selectedFilter === "recipe") {
       navigate(`/reports/prescriptions/${formattedDate}`);
     } else {
-      navigate(`/reports/drugs/${formattedDate}`);
+      navigate(`/reports/drugs/${formattedDate}/${drug}`);
     }
   };
 
@@ -116,7 +116,7 @@ export const ReportsPage = () => {
                   {filter?.map((item) => (
                     <tr
                       key={item?.day + (item?.drugName || "")}
-                      onClick={() => nav(item?.day)}
+                      onClick={() => nav(item?.day, item?.drugName)}
                     >
                       <td>{dayjs.utc(item?.day).format("DD.MM.YYYY")}</td>
                       {selectedFilter === "drug" && <td>{item?.drugName}</td>}

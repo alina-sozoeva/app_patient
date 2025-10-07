@@ -27,7 +27,7 @@ export const PrescriptionsInfo = () => {
   console.log(filteredPrescriptions, "filteredPrescriptions");
 
   return (
-    <div>
+    <div className={clsx("container")}>
       <section className={clsx("container relative")}>
         <Flex
           className={clsx(styles.patient_header)}

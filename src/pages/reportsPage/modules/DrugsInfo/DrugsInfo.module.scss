@@ -1,0 +1,42 @@
+.recipeTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+  th,
+  td {
+    padding: 2px 4px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+  }
+  th {
+    background: #f9f9f9;
+  }
+}
+
+.title {
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.patient_header {
+  background-color: var(--grey-color);
+  padding: 10px;
+
+  button {
+    background-color: var(--green-color);
+    border: none;
+    padding: 5px 10px;
+    color: var(--white-color);
+    border-radius: 5px;
+  }
+}
+
+.patient_about {
+  padding: 5px 10px;
+}
+
+.patient_info {
+  &_fio {
+    font-weight: 700;
+  }
+}

@@ -21,5 +21,5 @@ export const pathname = {
   newReferral: "/new-referral/:guid",
   referralDetails: "/referral-details/:guid",
   reportsPrescrip: "/reports/prescriptions/:date",
-  reportsDrugs: "/reports/drugs/:date",
+  reportsDrugs: "/reports/drugs/:date/:drug",
 };

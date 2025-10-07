@@ -45,8 +45,13 @@ export const PatientPage = () => {
   const { data: mappedData } = useGetMappedRecipesQuery({});
 
   const filterdData = mappedData
-    ?.filter((item) => +item?.doctor?.codeid === +user?.codeid)
+    ?.filter(
+      (item) =>
+        +item?.doctor?.codeid === +user?.codeid && item?.patient?.guid === guid
+    )
     ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  console.log(filterdData, "filterdData");
 
   const findPatient = patients?.find((item) => item?.guid === guid);
 
